@@ -1,21 +1,76 @@
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""               
-"               
-"               ██╗   ██╗██╗███╗   ███╗██████╗  ██████╗
-"               ██║   ██║██║████╗ ████║██╔══██╗██╔════╝
-"               ██║   ██║██║██╔████╔██║██████╔╝██║     
-"               ╚██╗ ██╔╝██║██║╚██╔╝██║██╔══██╗██║     
-"                ╚████╔╝ ██║██║ ╚═╝ ██║██║  ██║╚██████╗
-"                 ╚═══╝  ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝
-"               
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" 
+" ============================================================================
+"
+"                  ██╗   ██╗██╗███╗   ███╗██████╗  ██████╗
+"                  ██║   ██║██║████╗ ████║██╔══██╗██╔════╝
+"                  ██║   ██║██║██╔████╔██║██████╔╝██║
+"                  ╚██╗ ██╔╝██║██║╚██╔╝██║██╔══██╗██║
+"                   ╚████╔╝ ██║██║ ╚═╝ ██║██║  ██║╚██████╗
+"                    ╚═══╝  ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝
+" ============================================================================
 
-" Get the defaults that most users want.
-source $VIMRUNTIME/defaults.vim
+" ============================================================================
+" .VIMRC {{{
+" ============================================================================
 
-" SETTINGS ----------------------------------------------------------------{{{
+" Vim 8 defaults
+unlet! skip_defaults_vim
+silent! source $VIMRUNTIME/defaults.vim
 
 " Disable compatibility with VI
 set nocompatible
+
+augroup vimrc
+    autocmd!
+augroup END
+
+let s:darwin = has('mac')
+let mapleader      = ' '
+let maplocalleader = ' '
+
+" }}}
+" ============================================================================
+" VIM-PLUG BLOCK {{{
+" ============================================================================
+
+silent! if plug#begin()
+" call plug#begin('~/.vim/plugged')
+
+    Plug 'dracula/vim', { 'as': 'dracula' }
+    Plug 'vim-airline/vim-airline'
+    Plug 'dense-analysis/ale'
+    Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+    Plug 'junegunn/fzf.vim'
+    Plug 'tpope/vim-surround'
+    Plug 'tpope/vim-commentary'
+
+call plug#end()
+endif
+
+" }}}
+" ============================================================================
+" BASIC SETTINGS {{{
+" ============================================================================
+
+set foldmethod=marker  " Markers used to specify folds
+set autoindent         " Copy indent from current line on new line
+set number             " Add line numbers
+set shiftwidth=4       " Set shift width to 4 spaces
+set tabstop=4          " Set tab width to 4 columns
+set expandtab          " Use space character instead of tabs
+set nobackup           " Do not save backup files
+set scrolloff=50       " Do not let cursor scroll below or above N lines
+set nowrap             " Do not wrap lines
+set incsearch          " Incrementally highlight characters while searching
+set ignorecase         " Ignore capital letters during search
+set smartcase          " Override ignorecase specifically for capital letters
+set showcmd            " show partial command typed
+" set showmode           " show mode on last line
+set noshowmode         " remove mode from last line
+set showmatch          " show matching words during search
+set hlsearch           " highlight when searching
+set history=10000      " Set commands to save in history
+set colorcolumn=80     " Show colorcolumn
+set cursorline         " Show cursorline
 
 " Enable file type detection
 filetype on
@@ -25,42 +80,8 @@ filetype plugin on
 filetype indent on
 " Syntax highlighting on
 syntax on
-
-set autoindent
-" Add line numbers
-set number
-" Set shift width to 4 spaces
-set shiftwidth=4
-" Set tab width to 4 columns
-set tabstop=4
-" Use space character instead of tabs
-set expandtab
-
-" Do not save backup files
-set nobackup
-" Do not let cursor scroll below or above N lines while scrolling
-set scrolloff=10
-" Do not wrap lines
-set nowrap
-
-" Incrementally highlight characters while searching
-set incsearch
-" Ignore capital letters during search
-set ignorecase
-" Override ignorecase specifically for capital letters
-set smartcase
-" show partial command typed
-set showcmd
-
-" show mode on last line
-set showmode
-" show matching words during search
-set showmatch
-" highlight when searching
-set hlsearch
-" Set commands to save in history
-set history=1000
-
+" Omnicomplete (Inellisense) on
+set omnifunc=syntaxcomplete#Complete
 " Spellcheck
 set spell spelllang=en_us
 
@@ -71,16 +92,63 @@ set wildmode=list:longest
 " Ignore files not to be edited with Vim
 set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
 
-" use folds on triple curly braces
-set foldmethod=marker
+" Netrw interface
+let g:netrw_banner       = 0
+let g:netrw_keepdir      = 0
+let g:netrw_liststyle    = 3
+let g:netrw_sort_options = 'i'
+" open at startup if no argument specified
+autocmd VimEnter * if !argc() | Explore | endif
+" open if specified argument is a directory
+autocmd VimEnter * if isdirectory(expand('<afile>')) | Explore | endif
+
+" ctags
+set tags=./tags;/
+
+" mouse
+silent! set ttymouse=xterm2
+set mouse=a
+
+" ----------------------------------------------------------------------------
+" STATUS LINE
+" ----------------------------------------------------------------------------
+
+" " Clear status line when vimrc is reloaded.
+" set statusline=
+" " Status line left side.
+" set statusline+=\ %F\ %M\ %Y\ %R
+" " Use a divider to separate the left from the right side.
+" set statusline+=%=
+" " Status line right side.
+" set statusline+=\ %{LinterStatus()}\ ascii:\ %b\ hex:\ 0x%B\ row:\ %l\ col:\ %c\ percent:\ %p%%
+" " set statusline+=\ ascii:\ %b\ hex:\ 0x%B\ row:\ %l\ col:\ %c\ percent:\ %p%%
+" " Show the status on the second to last line.
+" set laststatus=2
 
 " }}}
+" ============================================================================
+" MAPPINGS {{{
+" ============================================================================
 
-" MAPPINGS ----------------------------------------------------------------{{{
+" Open new line below and above current line
+nnoremap <leader>o o<esc>
+nnoremap <leader>O O<esc>
 
-" Set leader key to comma
-let mapleader = ","
-nnoremap <leader>, ``
+" Save
+inoremap <C-s>     <C-O>:update<cr>
+nnoremap <C-s>     :update<cr>
+nnoremap <leader>s :update<cr>
+nnoremap <leader>w :update<cr>
+
+" Movement in insert mode
+inoremap <C-h> <C-o>h
+inoremap <C-l> <C-o>a
+inoremap <C-j> <C-o>j
+inoremap <C-k> <C-o>k
+inoremap <C-^> <C-o><C-^>
+
+" Make Y behave like other capitals
+nnoremap Y y$
 
 " Search results in middle of screen
 nnoremap n nzzzv
@@ -94,9 +162,8 @@ nnoremap <C-l> :nohl<CR><C-l>
 " Toggle line numbers
 nnoremap <C-c> :set norelativenumber!<CR>:set nonumber!<CR>
 
-" }}}
-
-" VIMSCRIPT ---------------------------------------------------------------{{{
+" Open file under cursor in a new tab
+nnoremap <leader>t :tabe **/<cfile><CR> :tabp<CR>
 
 " This will use relative hybrid numbers in normal mode.
 " Absolute numbers in insert or when not in focus.
@@ -118,54 +185,98 @@ if version >= 703
     set undoreload=10000
 endif
 
-" More Vimscripts code goes here.
+" ----------------------------------------------------------------------------
+" Quickfix
+" ----------------------------------------------------------------------------
+nnoremap ]q :cnext<cr>zz
+nnoremap [q :cprev<cr>zz
+nnoremap ]l :lnext<cr>zz
+nnoremap [l :lprev<cr>zz
+
+" ----------------------------------------------------------------------------
+" Buffers
+" ----------------------------------------------------------------------------
+nnoremap ]b :bnext<cr>
+nnoremap [b :bprev<cr>
+
+" ----------------------------------------------------------------------------
+" Tabs
+" ----------------------------------------------------------------------------
+nnoremap ]t :tabn<cr>
+nnoremap [t :tabp<cr>
+
+" ----------------------------------------------------------------------------
+" <tab> / <s-tab> | Circular windows navigation
+" ----------------------------------------------------------------------------
+nnoremap <tab>   <c-w>w
+nnoremap <S-tab> <c-w>W
 
 " }}}
+" ============================================================================
+" PLUGIN SPECIFIC SETTINGS {{{
+" ============================================================================
 
-" PLUGINS -----------------------------------------------------------------{{{
+" ----------------------------------------------------------------------------
+"                    |\                          ,,
+"                     \\          _              ||   _
+"                    / \\ ,._-_  < \,  _-_ \\ \\ ||  < \,
+"                   || ||  ||    /-|| ||   || || ||  /-||
+"                   || ||  ||   (( || ||   || || || (( ||
+"                    \\/   \\,   \/\\ \\,/ \\/\\ \\  \/\\
+" ----------------------------------------------------------------------------
 
-call plug#begin('~/.vim/plugged')
-    
-    Plug 'dense-analysis/ale'
-    Plug 'preservim/nerdtree'
-    Plug 'dracula/vim', { 'as': 'dracula' }
-    Plug 'junegunn/fzf'
-    Plug 'tpope/vim-surround'
-    Plug 'mg979/vim-visual-multi', {'branch': 'master'}
-    Plug 'tpope/vim-commentary'
-
-call plug#end()
-
+let g:airline_theme='dracula'
+set background=dark
+let g:dracula_bold = 1
+let g:dracula_italic = 0
+let g:dracula_underline = 1
+let g:dracula_undercurl = 1
+let g:dracula_full_special_attrs_support = 1
+let g:dracula_inverse = 0
+let g:dracula_colorterm = 0
+augroup dracula_customization
+      au!
+      autocmd Colorscheme dracula hi CursorLine cterm=underline term=underline
+augroup END
 colorscheme dracula
-set background=dark    
+
+" ----------------------------------------------------------------------------
+" ALE
+" ----------------------------------------------------------------------------
+
+" Enable completion where available.
+" This setting must be set before ALE is loaded.
+let g:ale_completion_enabled = 1
+set omnifunc=ale#completion#OmniFunc
+
+let g:ale_linters = {'javascript': ['eslint'], 'python': ['pylint'], 'HTML': ['prettier']}
+let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace'], 'HTML':
+       \['prettier'], 'javascript': ['prettier', 'eslint'], 'python': ['autoflake',
+       \'autopep8', 'autoimport']
+       \}
+" Lint status on status line
+function! LinterStatus() abort
+    let l:counts = ale#statusline#Count(bufnr(''))
+    let l:all_errors = l:counts.error + l:counts.style_error
+    let l:all_non_errors = l:counts.total - l:all_errors
+    return l:counts.total == 0 ? 'OK' : printf(
+        \   '%d⨉ %d⚠ ',
+        \   all_non_errors,
+        \   all_errors
+        \)
+endfunction
+
+let g:ale_fix_on_save = 1
+let g:ale_sign_error = '●'
+let g:ale_sign_warning = '.'
+let g:ale_lsp_suggestions = 1
+let g:ale_set_highlights = 1
+nmap <silent> <C-e> <Plug>(ale_next_wrap)
+nmap gd :ALEGoToDefinition<CR>
+nmap gr :ALEFindReferences<CR>
+
+let g:ale_set_loclist = 0
+let g:ale_set_quickfix = 1
 
 " }}}
-
-" PLUGIN SETTINGS -----------------------------------------------------------------{{{
-
-" NERDTree specific mappings.
-" Map the F3 key to toggle NERDTree open and close.
-nnoremap <F3> :NERDTreeToggle<cr>
-" Have nerdtree ignore certain files and directories.
-let NERDTreeIgnore=['\.git$', '\.jpg$', '\mp4$', '\.ogg$', '\.iso$', '\.pdf$', '\.pyc$', '\.odt$', '\.png$', '\.gif$', '\.db$']
-
-" }}}
-
-" STATUS LINE -------------------------------------------------------------{{{
-
-" Clear status line when vimrc is reloaded.
-set statusline=
-
-" Status line left side.
-set statusline+=\ %F\ %M\ %Y\ %R
-
-" Use a divider to separate the left from the right side.
-set statusline+=%=
-
-" Status line right side.
-set statusline+=\ ascii:\ %b\ hex:\ 0x%B\ row:\ %l\ col:\ %c\ percent:\ %p%%
-
-" Show the status on the second to last line.
-set laststatus=2
-
-" }}}
+" ============================================================================

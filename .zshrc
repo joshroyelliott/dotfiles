@@ -1,4 +1,4 @@
-#                    ██
+#                   ██
 #                   ░██
 #     ██████  ██████░██      ██████  █████
 #    ░░░░██  ██░░░░ ░██████ ░░██░░█ ██░░░██
@@ -7,10 +7,6 @@
 #     ██████ ██████ ░██  ░██░███   ░░█████
 #    ░░░░░░ ░░░░░░  ░░   ░░ ░░░     ░░░░░
 #
-
-# Path to current Python version
-PATH="/Library/Frameworks/Python.framework/Versions/Current/bin:${PATH}"
-export PATH
 
 # ALIASES ---------------------------------------------------------------------{{{
 
@@ -21,13 +17,55 @@ alias rm="rm -i"
 # # and humanize the file sizes:
 # alias ls="ls --color -l -h"
 
-# # grep: color and show the line
-# # number for each match:
-# alias grep="grep -n --color"
+# grep: color and show the line
+# number for each match:
+alias grep="grep -n --color"
+
+# always show with color
+alias tree="tree -C"
+
+alias exa="exa --long --tree"
+
+# Custom cd that also ls's
+cs()
+{
+builtin cd $@ && ls
+}
 
 # }}}
 
+# CONFIGURATION (FZF) ---------------------------------------------------------------------{{{
+
+export FZF_DEFAULT_OPS="--extended"
+export FZF_DEFAULT_COMMAND="fd --type f"
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+# Options to fzf command
+export FZF_COMPLETION_OPTS='--info=inline'
+
+# Use fd (https://github.com/sharkdp/fd) instead of the default find
+# command for listing path candidates.
+# - The first argument to the function ($1) is the base path to start traversal
+# - See the source code (completion.{bash,zsh}) for the details.
+_fzf_compgen_path() {
+  fd --hidden --follow --exclude ".git" . "$1"
+}
+
+# Use fd to generate the list for directory completion
+_fzf_compgen_dir() {
+  fd --type d --hidden --follow --exclude ".git" . "$1"
+}
+
+ #}}}
+
 # CONFIGURATION (DRACULA) ---------------------------------------------------------------------{{{
+
+#                    |\                          ,,       ~
+#                     \\          _              ||   _   ~
+#                    / \\ ,._-_  < \,  _-_ \\ \\ ||  < \, ~
+#                   || ||  ||    /-|| ||   || || ||  /-|| ~
+#                   || ||  ||   (( || ||   || || || (( || ~
+#                    \\/   \\,   \/\\ \\,/ \\/\\ \\  \/\\ ~
 
 # The git segment can be disabled
 DRACULA_DISPLAY_GIT=1
@@ -45,7 +83,7 @@ DRACULA_ARROW_ICON="-> "
 # export DRACULA_CUSTOM_VARIABLE=AWS:PROD:EU-WEST-1
 
 # You can display a new line for your commands
-DRACULA_DISPLAY_NEW_LINE=1
+# DRACULA_DISPLAY_NEW_LINE=1
 
 # Git Locking 0 or 1
 # DRACULA_GIT_NOLOCK=0
@@ -67,6 +105,13 @@ plugins=(
 # }}}
 
 # OH MY ZSH ---------------------------------------------------------------------{{{
+
+#            __                                     __
+#     ____  / /_     ____ ___  __  __   ____  _____/ /_
+#    / __ \/ __ \   / __ `__ \/ / / /  /_  / / ___/ __ \
+#   / /_/ / / / /  / / / / / / /_/ /    / /_(__  ) / / /
+#   \____/_/ /_/  /_/ /_/ /_/\__, /    /___/____/_/ /_/
+#                           /____/
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -161,3 +206,10 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 # }}}
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+# Zoxide configs
+eval "$(zoxide init zsh)"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

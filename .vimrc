@@ -51,6 +51,9 @@ endif
 " BASIC SETTINGS {{{
 " ============================================================================
 
+" Enable 256 colors in vim
+set t_Co=256
+
 set foldmethod=marker  " Markers used to specify folds
 set autoindent         " Copy indent from current line on new line
 set number             " Add line numbers

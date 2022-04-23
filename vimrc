@@ -7,8 +7,6 @@
 "                   ╚████╔╝ ██║██║ ╚═╝ ██║██║  ██║╚██████╗
 "                    ╚═══╝  ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝
 " ============================================================================
-
-" ============================================================================
 " .VIMRC {{{
 " ============================================================================
 
@@ -33,15 +31,26 @@ let maplocalleader = ' '
 " ============================================================================
 
 silent! if plug#begin()
-" call plug#begin('~/.vim/plugged')
 
+" Themes
     Plug 'dracula/vim', { 'as': 'dracula' }
+
+" Status
     Plug 'vim-airline/vim-airline'
+
+" Lint
     Plug 'dense-analysis/ale'
+
+" Search
     Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
     Plug 'junegunn/fzf.vim'
+
+" Edit
     Plug 'tpope/vim-surround'
     Plug 'tpope/vim-commentary'
+
+" Session
+    Plug 'tpope/vim-obsession'
 
 call plug#end()
 endif
@@ -220,6 +229,28 @@ nnoremap <S-tab> <c-w>W
 " ============================================================================
 
 " ----------------------------------------------------------------------------
+"                  _                       _      _ _
+"           __   _(_)_ __ ___         __ _(_)_ __| (_)_ __   ___
+"           \ \ / / | '_ ` _ \ _____ / _` | | '__| | | '_ \ / _ \
+"            \ V /| | | | | | |_____| (_| | | |  | | | | | |  __/
+"             \_/ |_|_| |_| |_|      \__,_|_|_|  |_|_|_| |_|\___|
+"
+" ----------------------------------------------------------------------------
+
+let g:airline_theme='dracula'
+
+let g:airline_extensions = ['fzf', 'ale', 'obsession']  " empty disables all
+
+let airline#extensions#ale#error_symbol = 'E:'       " ale error_symbol
+let airline#extensions#ale#warning_symbol = 'W:'     " ale warning
+let airline#extensions#ale#show_line_numbers = 1     " ale show_line_numbers
+let airline#extensions#ale#open_lnum_symbol = '(L'   " ale open_lnum_symbol
+let airline#extensions#ale#close_lnum_symbol = ')'   " ale close_lnum_symbol
+
+" set marked window indicator string
+let g:airline#extensions#obsession#indicator_text = '$'
+
+" ----------------------------------------------------------------------------
 "                    |\                          ,,
 "                     \\          _              ||   _
 "                    / \\ ,._-_  < \,  _-_ \\ \\ ||  < \,
@@ -228,7 +259,6 @@ nnoremap <S-tab> <c-w>W
 "                    \\/   \\,   \/\\ \\,/ \\/\\ \\  \/\\
 " ----------------------------------------------------------------------------
 
-let g:airline_theme='dracula'
 set background=dark
 let g:dracula_bold = 1
 let g:dracula_italic = 0
@@ -257,17 +287,17 @@ let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace'], 'HTML':
        \['prettier'], 'javascript': ['prettier', 'eslint'], 'python': ['autoflake',
        \'autopep8', 'autoimport']
        \}
-" Lint status on status line
-function! LinterStatus() abort
-    let l:counts = ale#statusline#Count(bufnr(''))
-    let l:all_errors = l:counts.error + l:counts.style_error
-    let l:all_non_errors = l:counts.total - l:all_errors
-    return l:counts.total == 0 ? 'OK' : printf(
-        \   '%d⨉ %d⚠ ',
-        \   all_non_errors,
-        \   all_errors
-        \)
-endfunction
+" " Lint status on status line
+" function! LinterStatus() abort
+"     let l:counts = ale#statusline#Count(bufnr(''))
+"     let l:all_errors = l:counts.error + l:counts.style_error
+"     let l:all_non_errors = l:counts.total - l:all_errors
+"     return l:counts.total == 0 ? 'OK' : printf(
+"         \   '%d⨉ %d⚠ ',
+"         \   all_non_errors,
+"         \   all_errors
+"         \)
+" endfunction
 
 let g:ale_fix_on_save = 1
 let g:ale_sign_error = '●'

@@ -8,8 +8,6 @@
 #                     ██████ ██████ ░██  ░██░███   ░░█████
 #                    ░░░░░░ ░░░░░░  ░░   ░░ ░░░     ░░░░░
 # ============================================================================
-
-# ============================================================================
 # PLUGINS {{{
 # ============================================================================
 
@@ -34,6 +32,8 @@ alias rm="rm -i"
 # # ls: adding colors, verbose listing
 # # and humanize the file sizes:
 # alias ls="ls --color -l -h"
+
+alias ctags="`brew --prefix`/bin/ctags"
 
 # grep: color and show the line
 # number for each match:

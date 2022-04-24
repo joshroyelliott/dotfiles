@@ -46,8 +46,13 @@ silent! if plug#begin()
     Plug 'junegunn/fzf.vim'
 
 " Edit
+    Plug 'tpope/vim-repeat'
+    Plug 'tpope/vim-endwise'
     Plug 'tpope/vim-surround'
     Plug 'tpope/vim-commentary'
+
+" Git
+    Plug 'tpope/vim-fugitive'
 
 " Session
     Plug 'tpope/vim-obsession'
@@ -65,6 +70,7 @@ set t_Co=256
 
 set foldmethod=marker  " Markers used to specify folds
 set autoindent         " Copy indent from current line on new line
+set smartindent        " Smart autoindent on new line
 set number             " Add line numbers
 set shiftwidth=4       " Set shift width to 4 spaces
 set tabstop=4          " Set tab width to 4 columns
@@ -152,13 +158,6 @@ nnoremap <C-s>     :update<cr>
 nnoremap <leader>s :update<cr>
 nnoremap <leader>w :update<cr>
 
-" Movement in insert mode
-inoremap <C-h> <C-o>h
-inoremap <C-l> <C-o>a
-inoremap <C-j> <C-o>j
-inoremap <C-k> <C-o>k
-inoremap <C-^> <C-o><C-^>
-
 " Make Y behave like other capitals
 nnoremap Y y$
 
@@ -173,9 +172,6 @@ nnoremap vv 0v$
 nnoremap <C-l> :nohl<CR><C-l>
 " Toggle line numbers
 nnoremap <C-c> :set norelativenumber!<CR>:set nonumber!<CR>
-
-" Open file under cursor in a new tab
-nnoremap <leader>t :tabe **/<cfile><CR> :tabp<CR>
 
 " This will use relative hybrid numbers in normal mode.
 " Absolute numbers in insert or when not in focus.
@@ -217,12 +213,6 @@ nnoremap [b :bprev<cr>
 nnoremap ]t :tabn<cr>
 nnoremap [t :tabp<cr>
 
-" ----------------------------------------------------------------------------
-" <tab> / <s-tab> | Circular windows navigation
-" ----------------------------------------------------------------------------
-nnoremap <tab>   <c-w>w
-nnoremap <S-tab> <c-w>W
-
 " }}}
 " ============================================================================
 " PLUGIN SPECIFIC SETTINGS {{{
@@ -239,13 +229,16 @@ nnoremap <S-tab> <c-w>W
 
 let g:airline_theme='dracula'
 
-let g:airline_extensions = ['fzf', 'ale', 'obsession']  " empty disables all
+" empty list disables all
+let g:airline_extensions = ['fzf', 'ale', 'branch', 'obsession']
 
 let airline#extensions#ale#error_symbol = 'E:'       " ale error_symbol
 let airline#extensions#ale#warning_symbol = 'W:'     " ale warning
 let airline#extensions#ale#show_line_numbers = 1     " ale show_line_numbers
 let airline#extensions#ale#open_lnum_symbol = '(L'   " ale open_lnum_symbol
 let airline#extensions#ale#close_lnum_symbol = ')'   " ale close_lnum_symbol
+
+let g:airline#extensions#branch#vcs_priority = ["git"] "add svn integration
 
 " set marked window indicator string
 let g:airline#extensions#obsession#indicator_text = '$'
@@ -287,24 +280,14 @@ let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace'], 'HTML':
        \['prettier'], 'javascript': ['prettier', 'eslint'], 'python': ['autoflake',
        \'autopep8', 'autoimport']
        \}
-" " Lint status on status line
-" function! LinterStatus() abort
-"     let l:counts = ale#statusline#Count(bufnr(''))
-"     let l:all_errors = l:counts.error + l:counts.style_error
-"     let l:all_non_errors = l:counts.total - l:all_errors
-"     return l:counts.total == 0 ? 'OK' : printf(
-"         \   '%d⨉ %d⚠ ',
-"         \   all_non_errors,
-"         \   all_errors
-"         \)
-" endfunction
 
 let g:ale_fix_on_save = 1
 let g:ale_sign_error = '●'
 let g:ale_sign_warning = '.'
-let g:ale_lsp_suggestions = 1
-let g:ale_set_highlights = 1
-nmap <silent> <C-e> <Plug>(ale_next_wrap)
+" let g:ale_lsp_suggestions = 1
+" let g:ale_set_highlights = 1
+nmap ]a <Plug>(ale_next_wrap)
+nmap [a <Plug>(ale_previous_wrap)
 nmap gd :ALEGoToDefinition<CR>
 nmap gr :ALEFindReferences<CR>
 

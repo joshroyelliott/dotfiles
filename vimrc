@@ -39,7 +39,11 @@ silent! if plug#begin()
     Plug 'vim-airline/vim-airline'
 
 " Lint
-    Plug 'dense-analysis/ale'
+    " Plug 'dense-analysis/ale'
+
+" Completion
+    Plug 'ycm-core/YouCompleteMe'
+    Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 
 " Search
     Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -126,22 +130,6 @@ set tags=./tags;/
 " mouse
 silent! set ttymouse=xterm2
 set mouse=a
-
-" ----------------------------------------------------------------------------
-" STATUS LINE
-" ----------------------------------------------------------------------------
-
-" " Clear status line when vimrc is reloaded.
-" set statusline=
-" " Status line left side.
-" set statusline+=\ %F\ %M\ %Y\ %R
-" " Use a divider to separate the left from the right side.
-" set statusline+=%=
-" " Status line right side.
-" set statusline+=\ %{LinterStatus()}\ ascii:\ %b\ hex:\ 0x%B\ row:\ %l\ col:\ %c\ percent:\ %p%%
-" " set statusline+=\ ascii:\ %b\ hex:\ 0x%B\ row:\ %l\ col:\ %c\ percent:\ %p%%
-" " Show the status on the second to last line.
-" set laststatus=2
 
 " }}}
 " ============================================================================
@@ -230,15 +218,15 @@ nnoremap [t :tabp<cr>
 let g:airline_theme='dracula'
 
 " empty list disables all
-let g:airline_extensions = ['fzf', 'ale', 'branch', 'obsession']
+let g:airline_extensions = ['fzf', 'ycm', 'branch', 'obsession']
 
-let airline#extensions#ale#error_symbol = 'E:'       " ale error_symbol
-let airline#extensions#ale#warning_symbol = 'W:'     " ale warning
-let airline#extensions#ale#show_line_numbers = 1     " ale show_line_numbers
-let airline#extensions#ale#open_lnum_symbol = '(L'   " ale open_lnum_symbol
-let airline#extensions#ale#close_lnum_symbol = ')'   " ale close_lnum_symbol
+" let airline#extensions#ale#error_symbol = 'E:'       " ale error_symbol
+" let airline#extensions#ale#warning_symbol = 'W:'     " ale warning
+" let airline#extensions#ale#show_line_numbers = 1     " ale show_line_numbers
+" let airline#extensions#ale#open_lnum_symbol = '(L'   " ale open_lnum_symbol
+" let airline#extensions#ale#close_lnum_symbol = ')'   " ale close_lnum_symbol
 
-let g:airline#extensions#branch#vcs_priority = ["git"] "add svn integration
+let g:airline#extensions#branch#vcs_priority = ["git"] "need svn integration
 
 " set marked window indicator string
 let g:airline#extensions#obsession#indicator_text = '$'
@@ -272,27 +260,45 @@ colorscheme dracula
 
 " Enable completion where available.
 " This setting must be set before ALE is loaded.
-let g:ale_completion_enabled = 1
-set omnifunc=ale#completion#OmniFunc
+" let g:ale_completion_enabled = 1
+" set omnifunc=ale#completion#OmniFunc
 
-let g:ale_linters = {'javascript': ['eslint'], 'python': ['pylint'], 'HTML': ['prettier']}
-let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace'], 'HTML':
-       \['prettier'], 'javascript': ['prettier', 'eslint'], 'python': ['autoflake',
-       \'autopep8', 'autoimport']
-       \}
+" let g:ale_linters = {'javascript': ['eslint'], 'python': ['pylint'], 'HTML': ['prettier']}
+" let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace'], 'HTML':
+       " \['prettier'], 'javascript': ['prettier', 'eslint'], 'python': ['autoflake',
+       " \'autopep8', 'autoimport']
+       " \}
 
-let g:ale_fix_on_save = 1
-let g:ale_sign_error = '●'
-let g:ale_sign_warning = '.'
+" let g:ale_fix_on_save = 1
+" let g:ale_sign_error = '●'
+" let g:ale_sign_warning = '.'
 " let g:ale_lsp_suggestions = 1
 " let g:ale_set_highlights = 1
-nmap ]a <Plug>(ale_next_wrap)
-nmap [a <Plug>(ale_previous_wrap)
-nmap gd :ALEGoToDefinition<CR>
-nmap gr :ALEFindReferences<CR>
+" nmap ]a <Plug>(ale_next_wrap)
+" nmap [a <Plug>(ale_previous_wrap)
+" nmap gd :ALEGoToDefinition<CR>
+" nmap gr :ALEFindReferences<CR>
 
-let g:ale_set_loclist = 0
-let g:ale_set_quickfix = 1
+" let g:ale_set_loclist = 0
+" let g:ale_set_quickfix = 1
+
+" ----------------------------------------------------------------------------
+" YOUCOMPLETEME
+" ----------------------------------------------------------------------------
+
+let g:ycm_min_num_of_chars_for_completion = 1
+let g:ycm_min_num_identifier_candidate_chars = 0
+let g:ycm_max_num_candidates = 20
+let g:ycm_auto_trigger = 1
+let g:ycm_filetype_whitelist = {'*': 1}
+let g:ycm_error_symbol = '>>'
+let g:ycm_warning_symbol = '>>'
+let g:ycm_always_populate_location_list = 0
+let g:ycm_open_loclist_on_ycm_diags = 1
+let g:ycm_collect_identifiers_from_tags_files = 0
+let g:ycm_seed_identifiers_with_syntax = 0
+let g:ycm_filepath_completion_use_working_dir = 0
+let g:ycm_use_ultisnips_completer = 1
 
 " }}}
 " ============================================================================

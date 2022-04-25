@@ -160,9 +160,9 @@ nnoremap N Nzzzv
 nnoremap vv 0v$
 
 " Clear search
-nnoremap <C-l> :nohl<CR><C-l>
+nnoremap <leader>c :nohl<CR>
 " Toggle line numbers
-nnoremap <C-c> :set norelativenumber!<CR>:set nonumber!<CR>
+nnoremap <C-n> :set norelativenumber!<CR>:set nonumber!<CR>
 
 " This will use relative hybrid numbers in normal mode.
 " Absolute numbers in insert or when not in focus.
@@ -210,6 +210,8 @@ nnoremap [t :tabp<cr>
 " ============================================================================
 
 " ----------------------------------------------------------------------------
+" AIRLINE {{{
+" ----------------------------------------------------------------------------
 "                  _                       _      _ _
 "           __   _(_)_ __ ___         __ _(_)_ __| (_)_ __   ___
 "           \ \ / / | '_ ` _ \ _____ / _` | | '__| | | '_ \ / _ \
@@ -225,7 +227,7 @@ let g:airline_extensions = ['fzf', 'ale', 'ycm', 'branch', 'fugitiveline', 'obse
 
 let airline#extensions#ale#error_symbol = 'AE:'       " ale error_symbol
 let airline#extensions#ale#warning_symbol = 'AW:'     " ale warning
-let airline#extensions#ale#show_line_numbers = 1     " ale show_line_numbers
+let airline#extensions#ale#show_line_numbers = 1      " ale show_line_numbers
 
 let g:airline#extensions#ycm#error_symbol = 'YE:'
 let g:airline#extensions#ycm#warning_symbol = 'YW:'
@@ -235,6 +237,9 @@ let g:airline#extensions#branch#vcs_priority = ["git"] "need svn integration
 " set marked window indicator string
 let g:airline#extensions#obsession#indicator_text = '$'
 
+" }}}
+" ----------------------------------------------------------------------------
+" DRACULA {{{
 " ----------------------------------------------------------------------------
 "                    |\                          ,,
 "                     \\          _              ||   _
@@ -257,9 +262,36 @@ augroup dracula_customization
       autocmd Colorscheme dracula hi CursorLine cterm=underline term=underline
 augroup END
 colorscheme dracula
-
+" }}}
 " ----------------------------------------------------------------------------
-" ALE
+" FZF {{{
+" ----------------------------------------------------------------------------
+
+" use ripgrep to search for files
+let $FZF_DEFAULT_COMMAND = 'rg -l ""'
+
+" fzf files in the cwd
+map <C-p> :Files<CR>
+" fzf open buffers
+map <C-b> :Buffers<CR>
+" fzf available cmds
+map <Leader><Leader> :Commands<CR>
+" fzf text in cwd
+map <Leader>/ :execute 'Rg ' . input('Rg/')<CR>
+" fzf lines in file
+map <Leader>l :BLines<CR>
+" fzf for files commited
+map <Leader>gf :GF?<CR>
+" Search for word under cursoe
+command! -bang -nargs=* RgExact
+  \ call fzf#vim#grep(
+  \   'rg -F --column --line-number --no-heading --color=always --smart-case
+  \   -- '.shellescape(<q-args>), 1, fzf#vim#with_preview(), <bang>0)
+nmap <Leader>G :execute 'RgExact ' . expand('<cword>') <Cr>
+
+" }}}
+" ----------------------------------------------------------------------------
+" ALE {{{
 " ----------------------------------------------------------------------------
 
 " Enable completion where available.
@@ -283,11 +315,15 @@ nmap [a <Plug>(ale_previous_wrap)
 nmap gd :ALEGoToDefinition<CR>
 nmap gr :ALEFindReferences<CR>
 
+" Bind F8 to fixing problems with ALE
+nmap <F8> <Plug>(ale_fix)
+
 " let g:ale_set_loclist = 0
 " let g:ale_set_quickfix = 1
 
+" }}}
 " ----------------------------------------------------------------------------
-" YOUCOMPLETEME
+" YOUCOMPLETEME {{{
 " ----------------------------------------------------------------------------
 
 let g:ycm_min_num_of_chars_for_completion = 1
@@ -304,8 +340,9 @@ let g:ycm_seed_identifiers_with_syntax = 0
 let g:ycm_filepath_completion_use_working_dir = 1
 let g:ycm_use_ultisnips_completer = 1
 
+" }}}
 " ----------------------------------------------------------------------------
-" VIM TMUX NAVIGATOR
+" VIM TMUX NAVIGATOR {{{
 " ----------------------------------------------------------------------------
 
 " Write all buffers before navigating from Vim to tmux pane
@@ -313,5 +350,7 @@ let g:tmux_navigator_save_on_switch = 2
 " If the tmux window is zoomed, keep it zoomed when moving from Vim
 let g:tmux_navigator_preserve_zoom = 1
 
+" }}}
+" ----------------------------------------------------------------------------
 " }}}
 " ============================================================================

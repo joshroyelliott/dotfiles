@@ -61,6 +61,9 @@ silent! if plug#begin()
 " Session
     Plug 'tpope/vim-obsession'
 
+" Tmux Integration
+    Plug 'christoomey/vim-tmux-navigator'
+
 call plug#end()
 endif
 
@@ -299,6 +302,16 @@ let g:ycm_collect_identifiers_from_tags_files = 0
 let g:ycm_seed_identifiers_with_syntax = 0
 let g:ycm_filepath_completion_use_working_dir = 0
 let g:ycm_use_ultisnips_completer = 1
+
+" ----------------------------------------------------------------------------
+" VIM TMUX NAVIGATOR
+" ----------------------------------------------------------------------------
+
+" Write all buffers before navigating from Vim to tmux pane
+let g:tmux_navigator_save_on_switch = 2
+
+" If the tmux window is zoomed, keep it zoomed when moving from Vim
+let g:tmux_navigator_preserve_zoom = 1
 
 " }}}
 " ============================================================================

@@ -39,7 +39,7 @@ silent! if plug#begin()
     Plug 'vim-airline/vim-airline'
 
 " Lint
-    " Plug 'dense-analysis/ale'
+    Plug 'dense-analysis/ale'
 
 " Completion
     Plug 'ycm-core/YouCompleteMe'
@@ -221,13 +221,14 @@ nnoremap [t :tabp<cr>
 let g:airline_theme='dracula'
 
 " empty list disables all
-let g:airline_extensions = ['fzf', 'ycm', 'branch', 'obsession']
+let g:airline_extensions = ['fzf', 'ale', 'ycm', 'branch', 'fugitiveline', 'obsession']
 
-" let airline#extensions#ale#error_symbol = 'E:'       " ale error_symbol
-" let airline#extensions#ale#warning_symbol = 'W:'     " ale warning
-" let airline#extensions#ale#show_line_numbers = 1     " ale show_line_numbers
-" let airline#extensions#ale#open_lnum_symbol = '(L'   " ale open_lnum_symbol
-" let airline#extensions#ale#close_lnum_symbol = ')'   " ale close_lnum_symbol
+let airline#extensions#ale#error_symbol = 'AE:'       " ale error_symbol
+let airline#extensions#ale#warning_symbol = 'AW:'     " ale warning
+let airline#extensions#ale#show_line_numbers = 1     " ale show_line_numbers
+
+let g:airline#extensions#ycm#error_symbol = 'YE:'
+let g:airline#extensions#ycm#warning_symbol = 'YW:'
 
 let g:airline#extensions#branch#vcs_priority = ["git"] "need svn integration
 
@@ -266,21 +267,21 @@ colorscheme dracula
 " let g:ale_completion_enabled = 1
 " set omnifunc=ale#completion#OmniFunc
 
-" let g:ale_linters = {'javascript': ['eslint'], 'python': ['pylint'], 'HTML': ['prettier']}
-" let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace'], 'HTML':
-       " \['prettier'], 'javascript': ['prettier', 'eslint'], 'python': ['autoflake',
-       " \'autopep8', 'autoimport']
-       " \}
+let g:ale_linters = {'javascript': ['eslint'], 'python': ['pylint'], 'HTML': ['prettier']}
+let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace'], 'HTML':
+       \['prettier'], 'javascript': ['prettier', 'eslint'], 'python': ['autoflake',
+       \'autopep8', 'autoimport']
+       \}
 
-" let g:ale_fix_on_save = 1
-" let g:ale_sign_error = '●'
-" let g:ale_sign_warning = '.'
-" let g:ale_lsp_suggestions = 1
-" let g:ale_set_highlights = 1
-" nmap ]a <Plug>(ale_next_wrap)
-" nmap [a <Plug>(ale_previous_wrap)
-" nmap gd :ALEGoToDefinition<CR>
-" nmap gr :ALEFindReferences<CR>
+let g:ale_fix_on_save = 1
+let g:ale_sign_error = '●'
+let g:ale_sign_warning = '.'
+let g:ale_lsp_suggestions = 1
+let g:ale_set_highlights = 1
+nmap ]a <Plug>(ale_next_wrap)
+nmap [a <Plug>(ale_previous_wrap)
+nmap gd :ALEGoToDefinition<CR>
+nmap gr :ALEFindReferences<CR>
 
 " let g:ale_set_loclist = 0
 " let g:ale_set_quickfix = 1
@@ -300,7 +301,7 @@ let g:ycm_always_populate_location_list = 0
 let g:ycm_open_loclist_on_ycm_diags = 1
 let g:ycm_collect_identifiers_from_tags_files = 0
 let g:ycm_seed_identifiers_with_syntax = 0
-let g:ycm_filepath_completion_use_working_dir = 0
+let g:ycm_filepath_completion_use_working_dir = 1
 let g:ycm_use_ultisnips_completer = 1
 
 " ----------------------------------------------------------------------------
@@ -309,7 +310,6 @@ let g:ycm_use_ultisnips_completer = 1
 
 " Write all buffers before navigating from Vim to tmux pane
 let g:tmux_navigator_save_on_switch = 2
-
 " If the tmux window is zoomed, keep it zoomed when moving from Vim
 let g:tmux_navigator_preserve_zoom = 1
 

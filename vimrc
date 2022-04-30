@@ -17,11 +17,7 @@ silent! source $VIMRUNTIME/defaults.vim
 " Disable compatibility with VI
 set nocompatible
 
-augroup vimrc
-    autocmd!
-augroup END
-
-let s:darwin = has('mac')
+" Set leader to Space
 let mapleader      = ' '
 let maplocalleader = ' '
 
@@ -75,27 +71,33 @@ endif
 " Enable 256 colors in vim
 set t_Co=256
 
-set foldmethod=marker  " Markers used to specify folds
-set autoindent         " Copy indent from current line on new line
-set smartindent        " Smart autoindent on new line
-set number             " Add line numbers
-set shiftwidth=4       " Set shift width to 4 spaces
-set tabstop=4          " Set tab width to 4 columns
-set expandtab          " Use space character instead of tabs
-set nobackup           " Do not save backup files
-set scrolloff=50       " Do not let cursor scroll below or above N lines
-set nowrap             " Do not wrap lines
-set incsearch          " Incrementally highlight characters while searching
-set ignorecase         " Ignore capital letters during search
-set smartcase          " Override ignorecase specifically for capital letters
-set showcmd            " show partial command typed
-" set showmode           " show mode on last line
-set noshowmode         " remove mode from last line
-set showmatch          " show matching words during search
-set hlsearch           " highlight when searching
-set history=10000      " Set commands to save in history
-set colorcolumn=80     " Show colorcolumn
-set cursorline         " Show cursorline
+set lazyredraw                   " Stops refresh during complex operations
+set foldmethod=marker            " Markers used to specify folds
+set autoindent                   " Copy indent from current line on new line
+set smartindent                  " Smart autoindent on new line
+set number                       " Add line numbers
+" set shiftwidth=4                 " Set shift width to 4 spaces
+" set tabstop=4                    " Set tab width to 4 columns
+" set expandtab                    " Use space character instead of tabs
+set nobackup                     " Do not save backup files
+set scrolloff=50                 " Do not let cursor scroll past N lines
+set nowrap                       " Do not wrap lines
+set incsearch                    " Incrementally highlight search characters
+set ignorecase                   " Ignore capital letters during search
+set smartcase                    " Override ignorecase for capital letters
+set showcmd                      " show partial command typed
+set noshowmode                   " remove mode from last line
+set showmatch                    " show matching words during search
+set hlsearch                     " highlight when searching
+set history=10000                " Set commands to save in history
+set colorcolumn=80               " Show colorcolumn
+set cursorline                   " Show cursorline
+
+set list                         " display unprintable characters
+set listchars=tab:▸\ ,eol:¬      " Use textmate-style whitespace characters
+
+set switchbuf=useopen            " Use open buffer if one exists
+set autoread                     " Reload files when they change on disk
 
 " Enable file type detection
 filetype on
@@ -109,7 +111,6 @@ syntax on
 set omnifunc=syntaxcomplete#Complete
 " Spellcheck
 set spell spelllang=en_us
-
 " Enable autocompletion after pressing tab
 set wildmenu
 " Make wildmenu behave like Bash completion
@@ -123,7 +124,7 @@ let g:netrw_keepdir      = 0
 let g:netrw_liststyle    = 3
 let g:netrw_sort_options = 'i'
 " open at startup if no argument specified
-autocmd VimEnter * if !argc() | Explore | endif
+" autocmd VimEnter * if !argc() | Explore | endif
 " open if specified argument is a directory
 autocmd VimEnter * if isdirectory(expand('<afile>')) | Explore | endif
 
@@ -146,8 +147,6 @@ nnoremap <leader>O O<esc>
 " Save
 inoremap <C-s>     <C-O>:update<cr>
 nnoremap <C-s>     :update<cr>
-nnoremap <leader>s :update<cr>
-nnoremap <leader>w :update<cr>
 
 " Make Y behave like other capitals
 nnoremap Y y$
@@ -173,8 +172,8 @@ augroup numbertoggle
 augroup END
 
 " If the current file type is HTML, set indentation to 2 spaces.
-autocmd Filetype html setlocal tabstop=2 shiftwidth=2 expandtab
-autocmd Filetype javascript setlocal sw=4 expandtab
+" autocmd Filetype html setlocal tabstop=2 shiftwidth=2 expandtab
+" autocmd Filetype javascript setlocal sw=4 expandtab
 
 " If Vim version is equal to or greater than 7.3 enable undofile.
 " This allows you to undo changes even after saving it.
@@ -183,6 +182,13 @@ if version >= 703
     set undofile
     set undoreload=10000
 endif
+
+" Quickly edit dotfiles
+map <silent> <leader>so :source ~/.vimrc<CR>
+map <leader>ev :edit ~/.config/dotfiles/vimrc<CR>
+map <leader>et :edit ~/.config/dotfiles/tmux.conf<CR>
+map <leader>ez :edit ~/.config/dotfiles/zshrc<CR>
+map <leader>df :edit ~/.config/dotfiles/<CR>
 
 " ----------------------------------------------------------------------------
 " Quickfix
@@ -282,7 +288,7 @@ map <Leader>/ :execute 'Rg ' . input('Rg/')<CR>
 map <Leader>l :BLines<CR>
 " fzf for files commited
 map <Leader>gf :GF?<CR>
-" Search for word under cursoe
+" Search for word under cursor
 command! -bang -nargs=* RgExact
   \ call fzf#vim#grep(
   \   'rg -F --column --line-number --no-heading --color=always --smart-case
@@ -340,6 +346,20 @@ let g:ycm_seed_identifiers_with_syntax = 0
 let g:ycm_filepath_completion_use_working_dir = 1
 let g:ycm_use_ultisnips_completer = 1
 
+" Avoid conflict with UltiSnips - Complete with tab
+let g:ycm_key_list_select_completion = ['<C-j>']
+let g:ycm_key_list_previous_completion = ['<C-k>']
+
+" }}}
+" ----------------------------------------------------------------------------
+" ULTISNIPS {{{
+" ----------------------------------------------------------------------------
+
+" Avoid conflict with YCM - Complete with C-l
+let g:UltiSnipsExpandTrigger = "<C-l>"
+let g:UltiSnipsJumpForwardTrigger = "<C-j>"
+let g:UltiSnipsJumpBackwardTrigger = "<C-k>"
+
 " }}}
 " ----------------------------------------------------------------------------
 " VIM TMUX NAVIGATOR {{{
@@ -350,7 +370,15 @@ let g:tmux_navigator_save_on_switch = 2
 " If the tmux window is zoomed, keep it zoomed when moving from Vim
 let g:tmux_navigator_preserve_zoom = 1
 
+" Remap to Caps to reduce collisions
+let g:tmux_navigator_no_mappings = 1
+nnoremap <silent>  <C-H>  :TmuxNavigateLeft<cr>
+nnoremap <silent>  <C-J>  :TmuxNavigateDown<cr>
+nnoremap <silent>  <C-K>  :TmuxNavigateUp<cr>
+nnoremap <silent>  <C-L>  :TmuxNavigateRight<cr>
+nnoremap <silent>  <C-\>  :TmuxNavigatePrevious<cr>
+
 " }}}
 " ----------------------------------------------------------------------------
 " }}}
-" ============================================================================
+" ===========================================================================

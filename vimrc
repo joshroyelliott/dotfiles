@@ -45,6 +45,10 @@ silent! if plug#begin()
     Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
     Plug 'junegunn/fzf.vim'
 
+" Focus
+    Plug 'junegunn/goyo.vim'
+    Plug 'junegunn/limelight.vim'
+
 " Edit
     Plug 'tpope/vim-repeat'
     Plug 'tpope/vim-endwise'
@@ -59,6 +63,9 @@ silent! if plug#begin()
 
 " Tmux Integration
     Plug 'christoomey/vim-tmux-navigator'
+
+" Wiki
+    Plug 'vimwiki/vimwiki'
 
 call plug#end()
 endif
@@ -76,9 +83,9 @@ set foldmethod=marker            " Markers used to specify folds
 set autoindent                   " Copy indent from current line on new line
 set smartindent                  " Smart autoindent on new line
 set number                       " Add line numbers
-" set shiftwidth=4                 " Set shift width to 4 spaces
-" set tabstop=4                    " Set tab width to 4 columns
-" set expandtab                    " Use space character instead of tabs
+set shiftwidth=4                 " Set shift width to 4 spaces
+set tabstop=4                    " Set tab width to 4 columns
+set expandtab                    " Use space character instead of tabs
 set nobackup                     " Do not save backup files
 set scrolloff=50                 " Do not let cursor scroll past N lines
 set nowrap                       " Do not wrap lines
@@ -93,8 +100,8 @@ set history=10000                " Set commands to save in history
 set colorcolumn=80               " Show colorcolumn
 set cursorline                   " Show cursorline
 
-set list                         " display unprintable characters
-set listchars=tab:▸\ ,eol:¬      " Use textmate-style whitespace characters
+" set list                         " display unprintable characters
+" set listchars=tab:▸\ ,eol:¬      " Use textmate-style whitespace characters
 
 set switchbuf=useopen            " Use open buffer if one exists
 set autoread                     " Reload files when they change on disk
@@ -182,7 +189,6 @@ if version >= 703
     set undofile
     set undoreload=10000
 endif
-
 " Quickly edit dotfiles
 map <silent> <leader>so :source ~/.vimrc<CR>
 map <leader>ev :edit ~/.config/dotfiles/vimrc<CR>
@@ -268,6 +274,7 @@ augroup dracula_customization
       autocmd Colorscheme dracula hi CursorLine cterm=underline term=underline
 augroup END
 colorscheme dracula
+
 " }}}
 " ----------------------------------------------------------------------------
 " FZF {{{
@@ -294,6 +301,56 @@ command! -bang -nargs=* RgExact
   \   'rg -F --column --line-number --no-heading --color=always --smart-case
   \   -- '.shellescape(<q-args>), 1, fzf#vim#with_preview(), <bang>0)
 nmap <Leader>G :execute 'RgExact ' . expand('<cword>') <Cr>
+
+" }}}
+" ----------------------------------------------------------------------------
+" GOYO {{{
+" ----------------------------------------------------------------------------
+
+function! s:goyo_enter()
+    if executable('tmux') && strlen($TMUX)
+        silent !tmux set status off
+        silent !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
+    endif
+    set noshowmode
+    set noshowcmd
+    set scrolloff=999
+    Limelight
+    " ...
+endfunction
+
+function! s:goyo_leave()
+    if executable('tmux') && strlen($TMUX)
+        silent !tmux set status on
+        silent !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
+    endif
+    set showmode
+    set showcmd
+    set scrolloff=5
+    Limelight!
+    " ...
+endfunction
+
+autocmd! User GoyoEnter nested call <SID>goyo_enter()
+autocmd! User GoyoLeave nested call <SID>goyo_leave()
+
+" }}}
+" ----------------------------------------------------------------------------
+" LIMELIGHT {{{
+" ----------------------------------------------------------------------------
+
+nmap <Leader>l <Plug>(Limelight)
+xmap <Leader>l <Plug>(Limelight)
+
+" Needed for some color themes
+let g:limelight_conceal_ctermfg = 240
+
+" Number of preceding/following paragraphs to include (default: 0)
+" let g:limelight_paragraph_span = 1
+
+" Highlighting priority (default: 10)
+" Set it to -1 not to overrule hlsearch
+" let g:limelight_priority = -1
 
 " }}}
 " ----------------------------------------------------------------------------
@@ -380,5 +437,6 @@ nnoremap <silent>  <C-\>  :TmuxNavigatePrevious<cr>
 
 " }}}
 " ----------------------------------------------------------------------------
+
 " }}}
-" ===========================================================================
+" ============================================================================

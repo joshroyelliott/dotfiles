@@ -29,25 +29,96 @@ let maplocalleader = ' '
 silent! if plug#begin()
 
 " Themes
+    Plug 'morhetz/gruvbox'
+    Plug 'altercation/vim-colors-solarized'
+    Plug 'tomasr/molokai'
+    Plug 'arcticicestudio/nord-vim'
     Plug 'dracula/vim', { 'as': 'dracula' }
+        let g:dracula_italic = 0
+        let g:dracula_full_special_attrs_support = 1
+        let g:dracula_colorterm = 0
 
 " Status
     Plug 'vim-airline/vim-airline'
+        let g:airline_extensions = ['fzf', 'ale', 'ycm', 'tagbar', 'branch',
+          \ 'fugitiveline', 'obsession']
 
 " Lint
     Plug 'dense-analysis/ale'
+        let g:ale_linters = {'javascript': ['eslint'], 'python': ['pylint'],
+          \ 'HTML': ['prettier']}
+        let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace'],
+          \ 'HTML': ['prettier'], 'javascript': ['prettier', 'eslint'],
+          \ 'python': ['autoflake', 'autopep8', 'autoimport']}
+
+        let g:ale_fix_on_save = 1
+        nmap ]a <Plug>(ale_next_wrap)
+        nmap [a <Plug>(ale_previous_wrap)
+        nmap gd :ALEGoToDefinition<CR>
+        nmap gr :ALEFindReferences<CR>
 
 " Completion
     Plug 'ycm-core/YouCompleteMe'
+        let g:ycm_filepath_completion_use_working_dir = 1
+        let g:ycm_use_ultisnips_completer = 1
+        let g:ycm_key_list_select_completion = ['<C-j>']
+        let g:ycm_key_list_previous_completion = ['<C-k>']
+
     Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+        let g:UltiSnipsExpandTrigger = "<C-l>"
+        let g:UltiSnipsJumpForwardTrigger = "<C-j>"
+        let g:UltiSnipsJumpBackwardTrigger = "<C-k>"
 
 " Search
     Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
     Plug 'junegunn/fzf.vim'
+        let $FZF_DEFAULT_COMMAND = 'rg -l ""' " use ripgrep to search
+        map <C-p> :Files<CR>
+        map <C-b> :Buffers<CR>
+        map <Leader><Leader> :Commands<CR>
+        map <Leader>h :Helptags<CR>
+        map <Leader>/ :execute 'Rg ' . input('Rg/')<CR>
+        map <Leader>l :BLines<CR>
+        map <Leader>gf :GF?<CR>
+        command! -bang -nargs=* RgExact       " Search for word under cursor
+          \ call fzf#vim#grep(
+          \   'rg -F --column --line-number --no-heading --color=always --smart-case
+          \   -- '.shellescape(<q-args>), 1, fzf#vim#with_preview(), <bang>0)
+        nmap <Leader>G :execute 'RgExact ' . expand('<cword>') <Cr>
+
+" Tags
+    Plug 'preservim/tagbar'
+        nmap <F8> :TagbarToggle<CR>
 
 " Focus
     Plug 'junegunn/goyo.vim'
+        function! s:goyo_enter()
+            if executable('tmux') && strlen($TMUX)
+                silent !tmux set status off
+                silent !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
+            endif
+            set noshowmode
+            set noshowcmd
+            set scrolloff=999
+            Limelight
+        endfunction
+
+        function! s:goyo_leave()
+            if executable('tmux') && strlen($TMUX)
+                silent !tmux set status on
+                silent !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
+            endif
+            set showmode
+            set showcmd
+            set scrolloff=5
+            Limelight!
+        endfunction
+
+        autocmd! User GoyoEnter nested call <SID>goyo_enter()
+        autocmd! User GoyoLeave nested call <SID>goyo_leave()
+
     Plug 'junegunn/limelight.vim'
+        let g:limelight_conceal_ctermfg = 240
 
 " Edit
     Plug 'tpope/vim-repeat'
@@ -58,11 +129,23 @@ silent! if plug#begin()
 " Git
     Plug 'tpope/vim-fugitive'
 
+" Gutter
+    Plug 'airblade/vim-gitgutter'
+    Plug 'kshenoy/vim-signature'
+
 " Session
     Plug 'tpope/vim-obsession'
 
 " Tmux Integration
     Plug 'christoomey/vim-tmux-navigator'
+        let g:tmux_navigator_save_on_switch = 2
+        let g:tmux_navigator_preserve_zoom = 1
+        let g:tmux_navigator_no_mappings = 1
+        nnoremap <silent>  <C-H>  :TmuxNavigateLeft<cr>
+        nnoremap <silent>  <C-J>  :TmuxNavigateDown<cr>
+        nnoremap <silent>  <C-K>  :TmuxNavigateUp<cr>
+        nnoremap <silent>  <C-L>  :TmuxNavigateRight<cr>
+        nnoremap <silent>  <C-\>  :TmuxNavigatePrevious<cr>
 
 " Wiki
     Plug 'vimwiki/vimwiki'
@@ -74,6 +157,8 @@ endif
 " ============================================================================
 " BASIC SETTINGS {{{
 " ============================================================================
+set background=dark
+colorscheme dracula
 
 " Enable 256 colors in vim
 set t_Co=256
@@ -99,45 +184,28 @@ set hlsearch                     " highlight when searching
 set history=10000                " Set commands to save in history
 set colorcolumn=80               " Show colorcolumn
 set cursorline                   " Show cursorline
-
-" set list                         " display unprintable characters
-" set listchars=tab:▸\ ,eol:¬      " Use textmate-style whitespace characters
-
 set switchbuf=useopen            " Use open buffer if one exists
 set autoread                     " Reload files when they change on disk
 
-" Enable file type detection
-filetype on
-" Enable plugins for detected file type
-filetype plugin on
-" Load an indent file for the file type
-filetype indent on
-" Syntax highlighting on
-syntax on
-" Omnicomplete (Inellisense) on
-set omnifunc=syntaxcomplete#Complete
-" Spellcheck
-set spell spelllang=en_us
-" Enable autocompletion after pressing tab
-set wildmenu
-" Make wildmenu behave like Bash completion
-set wildmode=list:longest
-" Ignore files not to be edited with Vim
+filetype on                      " Enable file type detection
+filetype plugin on               " Enable plugins for detected file type
+filetype indent on               " Load an indent file for the file type
+syntax on                        " Syntax highlighting on
+set spell spelllang=en_us        " Spellcheck
+set wildmenu                     " Enable autocompletion after pressing tab
+set wildmode=list:longest        " Make wildmenu behave like Bash completion
 set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
+set omnifunc=syntaxcomplete#Complete
 
 " Netrw interface
 let g:netrw_banner       = 0
 let g:netrw_keepdir      = 0
 let g:netrw_liststyle    = 3
 let g:netrw_sort_options = 'i'
-" open at startup if no argument specified
-" autocmd VimEnter * if !argc() | Explore | endif
 " open if specified argument is a directory
 autocmd VimEnter * if isdirectory(expand('<afile>')) | Explore | endif
-
 " ctags
 set tags=./tags;/
-
 " mouse
 silent! set ttymouse=xterm2
 set mouse=a
@@ -150,11 +218,9 @@ set mouse=a
 " Open new line below and above current line
 nnoremap <leader>o o<esc>
 nnoremap <leader>O O<esc>
-
 " Save
 inoremap <C-s>     <C-O>:update<cr>
 nnoremap <C-s>     :update<cr>
-
 " Make Y behave like other capitals
 nnoremap Y y$
 
@@ -170,8 +236,7 @@ nnoremap <leader>c :nohl<CR>
 " Toggle line numbers
 nnoremap <C-n> :set norelativenumber!<CR>:set nonumber!<CR>
 
-" This will use relative hybrid numbers in normal mode.
-" Absolute numbers in insert or when not in focus.
+" Relative numbers in normal mode, Absolute in insert
 augroup numbertoggle
   autocmd!
   autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu && mode() != "i" | set rnu   | endif
@@ -182,8 +247,7 @@ augroup END
 " autocmd Filetype html setlocal tabstop=2 shiftwidth=2 expandtab
 " autocmd Filetype javascript setlocal sw=4 expandtab
 
-" If Vim version is equal to or greater than 7.3 enable undofile.
-" This allows you to undo changes even after saving it.
+" This allows you to undo changes even after saving
 if version >= 703
     set undodir=~/.vim/backup
     set undofile
@@ -215,228 +279,6 @@ nnoremap [b :bprev<cr>
 " ----------------------------------------------------------------------------
 nnoremap ]t :tabn<cr>
 nnoremap [t :tabp<cr>
-
-" }}}
-" ============================================================================
-" PLUGIN SPECIFIC SETTINGS {{{
-" ============================================================================
-
-" ----------------------------------------------------------------------------
-" AIRLINE {{{
-" ----------------------------------------------------------------------------
-"                  _                       _      _ _
-"           __   _(_)_ __ ___         __ _(_)_ __| (_)_ __   ___
-"           \ \ / / | '_ ` _ \ _____ / _` | | '__| | | '_ \ / _ \
-"            \ V /| | | | | | |_____| (_| | | |  | | | | | |  __/
-"             \_/ |_|_| |_| |_|      \__,_|_|_|  |_|_|_| |_|\___|
-"
-" ----------------------------------------------------------------------------
-
-let g:airline_theme='dracula'
-
-" empty list disables all
-let g:airline_extensions = ['fzf', 'ale', 'ycm', 'branch', 'fugitiveline', 'obsession']
-
-let airline#extensions#ale#error_symbol = 'AE:'       " ale error_symbol
-let airline#extensions#ale#warning_symbol = 'AW:'     " ale warning
-let airline#extensions#ale#show_line_numbers = 1      " ale show_line_numbers
-
-let g:airline#extensions#ycm#error_symbol = 'YE:'
-let g:airline#extensions#ycm#warning_symbol = 'YW:'
-
-let g:airline#extensions#branch#vcs_priority = ["git"] "need svn integration
-
-" set marked window indicator string
-let g:airline#extensions#obsession#indicator_text = '$'
-
-" }}}
-" ----------------------------------------------------------------------------
-" DRACULA {{{
-" ----------------------------------------------------------------------------
-"                    |\                          ,,
-"                     \\          _              ||   _
-"                    / \\ ,._-_  < \,  _-_ \\ \\ ||  < \,
-"                   || ||  ||    /-|| ||   || || ||  /-||
-"                   || ||  ||   (( || ||   || || || (( ||
-"                    \\/   \\,   \/\\ \\,/ \\/\\ \\  \/\\
-" ----------------------------------------------------------------------------
-
-set background=dark
-let g:dracula_bold = 1
-let g:dracula_italic = 0
-let g:dracula_underline = 1
-let g:dracula_undercurl = 1
-let g:dracula_full_special_attrs_support = 1
-let g:dracula_inverse = 0
-let g:dracula_colorterm = 0
-augroup dracula_customization
-      au!
-      autocmd Colorscheme dracula hi CursorLine cterm=underline term=underline
-augroup END
-colorscheme dracula
-
-" }}}
-" ----------------------------------------------------------------------------
-" FZF {{{
-" ----------------------------------------------------------------------------
-
-" use ripgrep to search for files
-let $FZF_DEFAULT_COMMAND = 'rg -l ""'
-
-" fzf files in the cwd
-map <C-p> :Files<CR>
-" fzf open buffers
-map <C-b> :Buffers<CR>
-" fzf available cmds
-map <Leader><Leader> :Commands<CR>
-" fzf text in cwd
-map <Leader>/ :execute 'Rg ' . input('Rg/')<CR>
-" fzf lines in file
-map <Leader>l :BLines<CR>
-" fzf for files commited
-map <Leader>gf :GF?<CR>
-" Search for word under cursor
-command! -bang -nargs=* RgExact
-  \ call fzf#vim#grep(
-  \   'rg -F --column --line-number --no-heading --color=always --smart-case
-  \   -- '.shellescape(<q-args>), 1, fzf#vim#with_preview(), <bang>0)
-nmap <Leader>G :execute 'RgExact ' . expand('<cword>') <Cr>
-
-" }}}
-" ----------------------------------------------------------------------------
-" GOYO {{{
-" ----------------------------------------------------------------------------
-
-function! s:goyo_enter()
-    if executable('tmux') && strlen($TMUX)
-        silent !tmux set status off
-        silent !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
-    endif
-    set noshowmode
-    set noshowcmd
-    set scrolloff=999
-    Limelight
-    " ...
-endfunction
-
-function! s:goyo_leave()
-    if executable('tmux') && strlen($TMUX)
-        silent !tmux set status on
-        silent !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
-    endif
-    set showmode
-    set showcmd
-    set scrolloff=5
-    Limelight!
-    " ...
-endfunction
-
-autocmd! User GoyoEnter nested call <SID>goyo_enter()
-autocmd! User GoyoLeave nested call <SID>goyo_leave()
-
-" }}}
-" ----------------------------------------------------------------------------
-" LIMELIGHT {{{
-" ----------------------------------------------------------------------------
-
-nmap <Leader>l <Plug>(Limelight)
-xmap <Leader>l <Plug>(Limelight)
-
-" Needed for some color themes
-let g:limelight_conceal_ctermfg = 240
-
-" Number of preceding/following paragraphs to include (default: 0)
-" let g:limelight_paragraph_span = 1
-
-" Highlighting priority (default: 10)
-" Set it to -1 not to overrule hlsearch
-" let g:limelight_priority = -1
-
-" }}}
-" ----------------------------------------------------------------------------
-" ALE {{{
-" ----------------------------------------------------------------------------
-
-" Enable completion where available.
-" This setting must be set before ALE is loaded.
-" let g:ale_completion_enabled = 1
-" set omnifunc=ale#completion#OmniFunc
-
-let g:ale_linters = {'javascript': ['eslint'], 'python': ['pylint'], 'HTML': ['prettier']}
-let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace'], 'HTML':
-       \['prettier'], 'javascript': ['prettier', 'eslint'], 'python': ['autoflake',
-       \'autopep8', 'autoimport']
-       \}
-
-let g:ale_fix_on_save = 1
-let g:ale_sign_error = '●'
-let g:ale_sign_warning = '.'
-let g:ale_lsp_suggestions = 1
-let g:ale_set_highlights = 1
-nmap ]a <Plug>(ale_next_wrap)
-nmap [a <Plug>(ale_previous_wrap)
-nmap gd :ALEGoToDefinition<CR>
-nmap gr :ALEFindReferences<CR>
-
-" Bind F8 to fixing problems with ALE
-nmap <F8> <Plug>(ale_fix)
-
-" let g:ale_set_loclist = 0
-" let g:ale_set_quickfix = 1
-
-" }}}
-" ----------------------------------------------------------------------------
-" YOUCOMPLETEME {{{
-" ----------------------------------------------------------------------------
-
-let g:ycm_min_num_of_chars_for_completion = 1
-let g:ycm_min_num_identifier_candidate_chars = 0
-let g:ycm_max_num_candidates = 20
-let g:ycm_auto_trigger = 1
-let g:ycm_filetype_whitelist = {'*': 1}
-let g:ycm_error_symbol = '>>'
-let g:ycm_warning_symbol = '>>'
-let g:ycm_always_populate_location_list = 0
-let g:ycm_open_loclist_on_ycm_diags = 1
-let g:ycm_collect_identifiers_from_tags_files = 0
-let g:ycm_seed_identifiers_with_syntax = 0
-let g:ycm_filepath_completion_use_working_dir = 1
-let g:ycm_use_ultisnips_completer = 1
-
-" Avoid conflict with UltiSnips - Complete with tab
-let g:ycm_key_list_select_completion = ['<C-j>']
-let g:ycm_key_list_previous_completion = ['<C-k>']
-
-" }}}
-" ----------------------------------------------------------------------------
-" ULTISNIPS {{{
-" ----------------------------------------------------------------------------
-
-" Avoid conflict with YCM - Complete with C-l
-let g:UltiSnipsExpandTrigger = "<C-l>"
-let g:UltiSnipsJumpForwardTrigger = "<C-j>"
-let g:UltiSnipsJumpBackwardTrigger = "<C-k>"
-
-" }}}
-" ----------------------------------------------------------------------------
-" VIM TMUX NAVIGATOR {{{
-" ----------------------------------------------------------------------------
-
-" Write all buffers before navigating from Vim to tmux pane
-let g:tmux_navigator_save_on_switch = 2
-" If the tmux window is zoomed, keep it zoomed when moving from Vim
-let g:tmux_navigator_preserve_zoom = 1
-
-" Remap to Caps to reduce collisions
-let g:tmux_navigator_no_mappings = 1
-nnoremap <silent>  <C-H>  :TmuxNavigateLeft<cr>
-nnoremap <silent>  <C-J>  :TmuxNavigateDown<cr>
-nnoremap <silent>  <C-K>  :TmuxNavigateUp<cr>
-nnoremap <silent>  <C-L>  :TmuxNavigateRight<cr>
-nnoremap <silent>  <C-\>  :TmuxNavigatePrevious<cr>
-
-" }}}
-" ----------------------------------------------------------------------------
 
 " }}}
 " ============================================================================

@@ -13,13 +13,14 @@
 " Vim 8 defaults
 unlet! skip_defaults_vim
 silent! source $VIMRUNTIME/defaults.vim
-
 " Disable compatibility with VI
 set nocompatible
 
-" Set leader to Space
 let mapleader      = ' '
 let maplocalleader = ' '
+
+silent! set ttymouse=xterm2
+set mouse=a
 
 " }}}
 " ============================================================================
@@ -30,10 +31,9 @@ silent! if plug#begin()
 
 " Themes
     Plug 'morhetz/gruvbox'
-    Plug 'altercation/vim-colors-solarized'
-    Plug 'tomasr/molokai'
     Plug 'arcticicestudio/nord-vim'
     Plug 'dracula/vim', { 'as': 'dracula' }
+        let g:dracula_inverse = 0
         let g:dracula_italic = 0
         let g:dracula_full_special_attrs_support = 1
         let g:dracula_colorterm = 0
@@ -54,8 +54,6 @@ silent! if plug#begin()
         let g:ale_fix_on_save = 1
         nmap ]a <Plug>(ale_next_wrap)
         nmap [a <Plug>(ale_previous_wrap)
-        nmap gd :ALEGoToDefinition<CR>
-        nmap gr :ALEFindReferences<CR>
 
 " Completion
     Plug 'ycm-core/YouCompleteMe'
@@ -116,6 +114,7 @@ silent! if plug#begin()
 
         autocmd! User GoyoEnter nested call <SID>goyo_enter()
         autocmd! User GoyoLeave nested call <SID>goyo_leave()
+        nmap <F6> :Goyo<CR>
 
     Plug 'junegunn/limelight.vim'
         let g:limelight_conceal_ctermfg = 240
@@ -160,55 +159,53 @@ endif
 set background=dark
 colorscheme dracula
 
-" Enable 256 colors in vim
-set t_Co=256
+filetype on                           " Enable file type detection
+filetype plugin on                    " Enable plugins for detected file type
+filetype indent on                    " Load an indent file for the file type
+syntax on                             " Syntax highlighting on
 
-set lazyredraw                   " Stops refresh during complex operations
-set foldmethod=marker            " Markers used to specify folds
-set autoindent                   " Copy indent from current line on new line
-set smartindent                  " Smart autoindent on new line
-set number                       " Add line numbers
-set shiftwidth=4                 " Set shift width to 4 spaces
-set tabstop=4                    " Set tab width to 4 columns
-set expandtab                    " Use space character instead of tabs
-set nobackup                     " Do not save backup files
-set scrolloff=50                 " Do not let cursor scroll past N lines
-set nowrap                       " Do not wrap lines
-set incsearch                    " Incrementally highlight search characters
-set ignorecase                   " Ignore capital letters during search
-set smartcase                    " Override ignorecase for capital letters
-set showcmd                      " show partial command typed
-set noshowmode                   " remove mode from last line
-set showmatch                    " show matching words during search
-set hlsearch                     " highlight when searching
-set history=10000                " Set commands to save in history
-set colorcolumn=80               " Show colorcolumn
-set cursorline                   " Show cursorline
-set switchbuf=useopen            " Use open buffer if one exists
-set autoread                     " Reload files when they change on disk
+set spell spelllang=en_us             " Spellcheck
+set t_Co=256                          " Enable 256 colors in vim
+set lazyredraw                        " Stops refresh during complex operations
+set foldmethod=marker                 " Markers used to specify folds
+set autoindent                        " Copy indent from current line on new
+set smartindent                       " Smart autoindent on new line
+set number                            " Add line numbers
+set shiftwidth=4                      " Set shift width to 4 spaces
+set tabstop=4                         " Set tab width to 4 columns
+set expandtab                         " Use space character instead of tabs
+set nobackup                          " Do not save backup files
+set scrolloff=50                      " Do not let cursor scroll past N lines
+set nowrap                            " Do not wrap lines
+set incsearch                         " Incrementally highlight search
+set ignorecase                        " Ignore capital letters during search
+set smartcase                         " Override ignorecase for capital letters
+set showcmd                           " Show partial command typed
+set noshowmode                        " Remove mode from last line
+set showmatch                         " Show matching words during search
+set hlsearch                          " Highlight when searching
+set history=10000                     " Set commands to save in history
+set colorcolumn=80                    " Show colorcolumn
+set cursorline                        " Show cursorline
+set switchbuf=useopen                 " Use open buffer if one exists
+set autoread                          " Reload files when they change on disk
+set omnifunc=syntaxcomplete#Complete  " Autocomplete
 
-filetype on                      " Enable file type detection
-filetype plugin on               " Enable plugins for detected file type
-filetype indent on               " Load an indent file for the file type
-syntax on                        " Syntax highlighting on
-set spell spelllang=en_us        " Spellcheck
-set wildmenu                     " Enable autocompletion after pressing tab
-set wildmode=list:longest        " Make wildmenu behave like Bash completion
+" Wildmenu
+set wildmenu
+set wildmode=list:longest
 set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
-set omnifunc=syntaxcomplete#Complete
 
-" Netrw interface
+" Netrw
 let g:netrw_banner       = 0
 let g:netrw_keepdir      = 0
 let g:netrw_liststyle    = 3
 let g:netrw_sort_options = 'i'
-" open if specified argument is a directory
+" Open if specified argument is a directory
 autocmd VimEnter * if isdirectory(expand('<afile>')) | Explore | endif
-" ctags
+
+" Ctags
 set tags=./tags;/
-" mouse
-silent! set ttymouse=xterm2
-set mouse=a
 
 " }}}
 " ============================================================================
@@ -223,30 +220,21 @@ inoremap <C-s>     <C-O>:update<cr>
 nnoremap <C-s>     :update<cr>
 " Make Y behave like other capitals
 nnoremap Y y$
-
 " Search results in middle of screen
 nnoremap n nzzzv
 nnoremap N Nzzzv
-
 " vv visual mode highlight line
 nnoremap vv 0v$
-
 " Clear search
-nnoremap <leader>c :nohl<CR>
+nnoremap <silent> <leader>c :let @/=""<CR>
 " Toggle line numbers
 nnoremap <C-n> :set norelativenumber!<CR>:set nonumber!<CR>
-
 " Relative numbers in normal mode, Absolute in insert
 augroup numbertoggle
   autocmd!
   autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu && mode() != "i" | set rnu   | endif
   autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu                  | set nornu | endif
 augroup END
-
-" If the current file type is HTML, set indentation to 2 spaces.
-" autocmd Filetype html setlocal tabstop=2 shiftwidth=2 expandtab
-" autocmd Filetype javascript setlocal sw=4 expandtab
-
 " This allows you to undo changes even after saving
 if version >= 703
     set undodir=~/.vim/backup
@@ -259,24 +247,15 @@ map <leader>ev :edit ~/.config/dotfiles/vimrc<CR>
 map <leader>et :edit ~/.config/dotfiles/tmux.conf<CR>
 map <leader>ez :edit ~/.config/dotfiles/zshrc<CR>
 map <leader>df :edit ~/.config/dotfiles/<CR>
-
-" ----------------------------------------------------------------------------
 " Quickfix
-" ----------------------------------------------------------------------------
 nnoremap ]q :cnext<cr>zz
 nnoremap [q :cprev<cr>zz
 nnoremap ]l :lnext<cr>zz
 nnoremap [l :lprev<cr>zz
-
-" ----------------------------------------------------------------------------
 " Buffers
-" ----------------------------------------------------------------------------
 nnoremap ]b :bnext<cr>
 nnoremap [b :bprev<cr>
-
-" ----------------------------------------------------------------------------
 " Tabs
-" ----------------------------------------------------------------------------
 nnoremap ]t :tabn<cr>
 nnoremap [t :tabp<cr>
 

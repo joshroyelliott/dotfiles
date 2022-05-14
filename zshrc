@@ -24,7 +24,7 @@ plugins=(
 
 # }}}
 # ============================================================================
-# CONFIGURATION {{{
+# CONFIG {{{
 # ============================================================================
 
 # ----------------------------------------------------------------------------
@@ -34,7 +34,6 @@ plugins=(
 export FZF_DEFAULT_OPS="--extended"
 export FZF_DEFAULT_COMMAND="fd --type f"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-
 # Options to fzf command
 export FZF_COMPLETION_OPTS='--info=inline'
 
@@ -62,27 +61,10 @@ _fzf_compgen_dir() {
 
 # Dracula themed FZF (Misbehaves in Terminal.app)
 export FZF_DEFAULT_OPTS='--color=fg:#f8f8f2,hl:#bd93f9 --color=fg+:#f8f8f2,hl+:#bd93f9 --color=info:#ffb86c,prompt:#50fa7b,pointer:#ff79c6 --color=marker:#ff79c6,spinner:#ffb86c,header:#6272a4'
-
-# The git segment can be disabled
 DRACULA_DISPLAY_GIT=1
-
-# The time segment shows a clock in either a 12 or 24 hour format based on your locale
 DRACULA_DISPLAY_TIME=1
-
-# The context segment shows the username, and, if logged in via SSH, the hostname
 DRACULA_DISPLAY_CONTEXT=1
-
-# The status segment indicator can be changed by setting the arrow icon
 DRACULA_ARROW_ICON="-> "
-
-# The custom segment can be changed by setting the DRACULA_CUSTOM_VARIABLE
-# export DRACULA_CUSTOM_VARIABLE=AWS:PROD:EU-WEST-1
-
-# You can display a new line for your commands
-# DRACULA_DISPLAY_NEW_LINE=1
-
-# Git Locking 0 or 1
-# DRACULA_GIT_NOLOCK=0
 
 # ----------------------------------------------------------------------------
 # ZSH SYNTAX HIGHLIGHTING (DRACULA)
@@ -276,16 +258,10 @@ source $ZSH/oh-my-zsh.sh
 # ============================================================================
 
 alias v="vim"
-
 # always prompt and show what's being deleted
 alias rm="rm -i"
-
 # use exuberant ctags
 alias ctags="`brew --prefix`/bin/ctags"
-
-# ----------------------------------------------------------------------------
-# MODERN UNIX UTILITIES
-# ----------------------------------------------------------------------------
 
 # exa
 alias ls="exa"                          # replace ls
@@ -297,8 +273,6 @@ if command -v bat > /dev/null; then
     alias cat="bat"                     # replace cat
 fi
 
-# ripgrep
-# fzf
 # zoxide
 alias cd="z"                            # replace cd
 alias zz="z -"                          # zz to previous directory

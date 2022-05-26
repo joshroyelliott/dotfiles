@@ -7,7 +7,7 @@
 "                   ╚████╔╝ ██║██║ ╚═╝ ██║██║  ██║╚██████╗
 "                    ╚═══╝  ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝
 " ============================================================================
-" .VIMRC {{{
+" VIM {{{
 " ============================================================================
 
 " Vim 8 defaults
@@ -30,6 +30,9 @@ set mouse=a
 silent! if plug#begin()
 
 " Themes
+    Plug 'altercation/vim-colors-solarized'
+        let g:solarized_termcolors=256
+    Plug 'noahfrederick/vim-noctu'
     Plug 'morhetz/gruvbox'
     Plug 'arcticicestudio/nord-vim'
     Plug 'dracula/vim', { 'as': 'dracula' }
@@ -43,7 +46,7 @@ silent! if plug#begin()
         let g:airline_extensions = ['fzf', 'ale', 'ycm', 'tagbar', 'branch',
           \ 'fugitiveline', 'obsession']
 
-" Lint
+" Linting
     Plug 'dense-analysis/ale'
         let g:ale_linters = {'javascript': ['eslint'], 'python': ['pylint'],
           \ 'HTML': ['prettier']}
@@ -54,6 +57,7 @@ silent! if plug#begin()
         let g:ale_fix_on_save = 1
         nmap ]a <Plug>(ale_next_wrap)
         nmap [a <Plug>(ale_previous_wrap)
+
 
 " Completion
     Plug 'ycm-core/YouCompleteMe'
@@ -67,26 +71,27 @@ silent! if plug#begin()
         let g:UltiSnipsJumpForwardTrigger = "<C-j>"
         let g:UltiSnipsJumpBackwardTrigger = "<C-k>"
 
-" Search
+" Browsing
+    Plug 'preservim/tagbar'
+        nmap <F8> :TagbarToggle<CR>
+    Plug 'preservim/nerdtree'
+        nmap <F7> :NERDTreeToggle<CR>
+
     Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
     Plug 'junegunn/fzf.vim'
         let $FZF_DEFAULT_COMMAND = 'rg -l ""' " use ripgrep to search
         map <C-p> :Files<CR>
-        map <C-b> :Buffers<CR>
         map <Leader><Leader> :Commands<CR>
+        map <Leader>b :Buffers<CR>
         map <Leader>h :Helptags<CR>
         map <Leader>/ :execute 'Rg ' . input('Rg/')<CR>
         map <Leader>l :BLines<CR>
         map <Leader>gf :GF?<CR>
-        command! -bang -nargs=* RgExact       " Search for word under cursor
+        command! -bang -nargs=* RgExact
           \ call fzf#vim#grep(
           \   'rg -F --column --line-number --no-heading --color=always --smart-case
           \   -- '.shellescape(<q-args>), 1, fzf#vim#with_preview(), <bang>0)
         nmap <Leader>G :execute 'RgExact ' . expand('<cword>') <Cr>
-
-" Tags
-    Plug 'preservim/tagbar'
-        nmap <F8> :TagbarToggle<CR>
 
 " Focus
     Plug 'junegunn/goyo.vim'
@@ -148,6 +153,9 @@ silent! if plug#begin()
 
 " Wiki
     Plug 'vimwiki/vimwiki'
+    Plug 'tools-life/taskwiki'
+        let g:vimwiki_list = [{'path': '~/vimwiki/',
+                              \ 'syntax': 'markdown', 'ext': '.md'}]
 
 call plug#end()
 endif
@@ -242,7 +250,7 @@ if version >= 703
     set undoreload=10000
 endif
 " Quickly edit dotfiles
-map <silent> <leader>so :source ~/.vimrc<CR>
+map <silent> <leader>so :source $MYVIMRC<CR>
 map <leader>ev :edit ~/.config/dotfiles/vimrc<CR>
 map <leader>et :edit ~/.config/dotfiles/tmux.conf<CR>
 map <leader>ez :edit ~/.config/dotfiles/zshrc<CR>
@@ -258,6 +266,15 @@ nnoremap [b :bprev<cr>
 " Tabs
 nnoremap ]t :tabn<cr>
 nnoremap [t :tabp<cr>
+
+" Show syntax under cursor
+nmap <C-m> :call <SID>SynStack()<CR>
+function! <SID>SynStack()
+    if !exists("*synstack")
+        return
+    endif
+        echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc
 
 " }}}
 " ============================================================================

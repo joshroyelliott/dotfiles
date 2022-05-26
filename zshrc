@@ -17,9 +17,9 @@
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-    git
     zsh-syntax-highlighting
     zsh-autosuggestions
+    taskwarrior
 )
 
 # }}}
@@ -60,13 +60,6 @@ eval "$(zoxide init zsh)"
 # ============================================================================
 # OH MY ZSH {{{
 # ============================================================================
-#                    __                                     __
-#             ____  / /_     ____ ___  __  __   ____  _____/ /_
-#            / __ \/ __ \   / __ `__ \/ / / /  /_  / / ___/ __ \
-#           / /_/ / / / /  / / / / / / /_/ /    / /_(__  ) / / /
-#           \____/_/ /_/  /_/ /_/ /_/\__, /    /___/____/_/ /_/
-#                                /____/
-# ============================================================================
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -81,61 +74,34 @@ ZSH_THEME="dracula"
 # Uncomment the following line to change how often to auto-update (in days).
 # zstyle ':omz:update' frequency 13
 
-# Uncomment the following line if pasting URLs and other text is messed up.
-# DISABLE_MAGIC_FUNCTIONS="true"
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
 source $ZSH/oh-my-zsh.sh
-
-# User configuration
-
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
 
 # }}}
 # ============================================================================
 # ALIASES {{{
 # ============================================================================
 
-if command -v most > /dev/null 2>&1; then
-    export PAGER="most"
-fi
-
-if command -v vim > /dev/null 2>&1; then
-    export EDITOR=vim
-fi
-
+export EDITOR=vim
 alias v="vim"
-# always prompt and show what's being deleted
+
+# Quick access to dotfiles
+alias zshrc='${=EDITOR} ${ZDOTDIR:-$HOME}/.zshrc'
+alias vimrc='${=EDITOR} ${ZDOTDIR:-$HOME}/.vimrc'
+alias tmuxconf='${=EDITOR} ${ZDOTDIR:-$HOME}/.tmux.conf'
+
 alias rm="rm -i"
+alias cp="cp -i"
+alias mv="mv -i"
+
 # use exuberant ctags
 alias ctags="`brew --prefix`/bin/ctags"
 
 # exa
-alias ls="exa"                          # replace ls
-alias ll="exa -alh"                     # nicely formatted list
-alias tree="exa --tree"                 # replace tree with exa tree
+if command -v exa > /dev/null 2>&1; then
+    alias ls="exa"                          # replace ls
+    alias ll="exa -alh"                     # nicely formatted list
+    alias tree="exa --tree"                 # replace tree with exa tree
+fi
 
 # bat
 if command -v bat > /dev/null 2>&1; then
@@ -143,8 +109,10 @@ if command -v bat > /dev/null 2>&1; then
 fi
 
 # zoxide
-alias cd="z"                            # replace cd
-alias zz="z -"                          # zz to previous directory
+if command -v zoxide > /dev/null 2>&1; then
+    alias cd="z"                            # replace cd
+    alias zz="z -"                          # zz to previous directory
+fi
 
 # }}}
 # ============================================================================

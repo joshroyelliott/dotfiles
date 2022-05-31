@@ -58,7 +58,6 @@ silent! if plug#begin()
         nmap ]a <Plug>(ale_next_wrap)
         nmap [a <Plug>(ale_previous_wrap)
 
-
 " Completion
     Plug 'ycm-core/YouCompleteMe'
         let g:ycm_filepath_completion_use_working_dir = 1
@@ -72,13 +71,11 @@ silent! if plug#begin()
         let g:UltiSnipsJumpBackwardTrigger = "<C-k>"
 
 " Browsing
-    Plug 'preservim/tagbar'
+    Plug 'preservim/tagbar' | Plug 'preservim/nerdtree'
         nmap <F8> :TagbarToggle<CR>
-    Plug 'preservim/nerdtree'
         nmap <F7> :NERDTreeToggle<CR>
 
-    Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-    Plug 'junegunn/fzf.vim'
+    Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } |  Plug 'junegunn/fzf.vim'
         let $FZF_DEFAULT_COMMAND = 'rg -l ""' " use ripgrep to search
         map <C-p> :Files<CR>
         map <Leader><Leader> :Commands<CR>
@@ -130,15 +127,14 @@ silent! if plug#begin()
     Plug 'tpope/vim-surround'
     Plug 'tpope/vim-commentary'
 
+" Session
+    Plug 'tpope/vim-obsession'
+
 " Git
     Plug 'tpope/vim-fugitive'
 
 " Gutter
-    Plug 'airblade/vim-gitgutter'
-    Plug 'kshenoy/vim-signature'
-
-" Session
-    Plug 'tpope/vim-obsession'
+    Plug 'airblade/vim-gitgutter' | Plug 'kshenoy/vim-signature'
 
 " Tmux Integration
     Plug 'christoomey/vim-tmux-navigator'
@@ -152,8 +148,7 @@ silent! if plug#begin()
         nnoremap <silent>  <C-\>  :TmuxNavigatePrevious<cr>
 
 " Wiki
-    Plug 'vimwiki/vimwiki'
-    Plug 'tools-life/taskwiki'
+    Plug 'vimwiki/vimwiki' | Plug 'tools-life/taskwiki'
         let g:vimwiki_list = [{'path': '~/vimwiki/',
                               \ 'syntax': 'markdown', 'ext': '.md'}]
 
@@ -209,7 +204,8 @@ let g:netrw_banner       = 0
 let g:netrw_keepdir      = 0
 let g:netrw_liststyle    = 3
 let g:netrw_sort_options = 'i'
-" Open if specified argument is a directory
+
+" Open Explore if specified argument is a directory
 autocmd VimEnter * if isdirectory(expand('<afile>')) | Explore | endif
 
 " Ctags
@@ -275,6 +271,10 @@ function! <SID>SynStack()
     endif
         echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 endfunc
+
+" File specific abbreviations (snippets)
+:autocmd FileType python     :iabbrev <buffer> iff if:<left>
+:autocmd FileType javascript :iabbrev <buffer> iff if ()<left>
 
 " }}}
 " ============================================================================

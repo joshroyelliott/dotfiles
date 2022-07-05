@@ -79,8 +79,8 @@ source $ZSH/oh-my-zsh.sh
 # ALIASES {{{
 # ============================================================================
 
-export EDITOR=vim
-alias v="vim"
+export EDITOR=nvim
+alias v="nvim"
 
 # Quick access to dotfiles
 alias zshrc='${=EDITOR} ${ZDOTDIR:-$HOME}/.zshrc'
@@ -90,9 +90,6 @@ alias tmuxconf='${=EDITOR} ${ZDOTDIR:-$HOME}/.tmux.conf'
 alias rm="rm -i"
 alias cp="cp -i"
 alias mv="mv -i"
-
-# use exuberant ctags
-alias ctags="`brew --prefix`/bin/ctags"
 
 # exa
 if command -v exa > /dev/null 2>&1; then
@@ -113,7 +110,5 @@ fi
 
 # }}}
 # ============================================================================
-
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

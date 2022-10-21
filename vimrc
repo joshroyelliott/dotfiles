@@ -126,6 +126,8 @@ silent! if plug#begin()
     Plug 'tpope/vim-endwise'
     Plug 'tpope/vim-surround'
     Plug 'tpope/vim-commentary'
+    Plug 'tpope/vim-unimpaired'
+    " Plug 'tpope/vim-sensible'
 
 " Session
     Plug 'tpope/vim-obsession'
@@ -151,6 +153,9 @@ silent! if plug#begin()
     Plug 'vimwiki/vimwiki' | Plug 'tools-life/taskwiki'
         let g:vimwiki_list = [{'path': '~/vimwiki/',
                               \ 'syntax': 'markdown', 'ext': '.md'}]
+
+" Other
+    Plug 'mfukar/robotframework-vim'
 
 call plug#end()
 endif
@@ -216,9 +221,9 @@ set tags=./tags;/
 " MAPPINGS {{{
 " ============================================================================
 
-" Open new line below and above current line
-nnoremap <leader>o o<esc>
-nnoremap <leader>O O<esc>
+" " Open new line below and above current line
+" nnoremap <leader>o o<esc>
+" nnoremap <leader>O O<esc>
 " Save
 inoremap <C-s>     <C-O>:update<cr>
 nnoremap <C-s>     :update<cr>
@@ -251,17 +256,17 @@ map <leader>ev :edit ~/.config/dotfiles/vimrc<CR>
 map <leader>et :edit ~/.config/dotfiles/tmux.conf<CR>
 map <leader>ez :edit ~/.config/dotfiles/zshrc<CR>
 map <leader>df :edit ~/.config/dotfiles/<CR>
-" Quickfix
-nnoremap ]q :cnext<cr>zz
-nnoremap [q :cprev<cr>zz
-nnoremap ]l :lnext<cr>zz
-nnoremap [l :lprev<cr>zz
-" Buffers
-nnoremap ]b :bnext<cr>
-nnoremap [b :bprev<cr>
-" Tabs
-nnoremap ]t :tabn<cr>
-nnoremap [t :tabp<cr>
+" " Quickfix
+" nnoremap ]q :cnext<cr>zz
+" nnoremap [q :cprev<cr>zz
+" nnoremap ]l :lnext<cr>zz
+" nnoremap [l :lprev<cr>zz
+" " Buffers
+" nnoremap ]b :bnext<cr>
+" nnoremap [b :bprev<cr>
+" " Tabs
+" nnoremap ]t :tabn<cr>
+" nnoremap [t :tabp<cr>
 
 " Show syntax under cursor
 nmap <C-m> :call <SID>SynStack()<CR>

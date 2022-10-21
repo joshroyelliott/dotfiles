@@ -1,4 +1,3 @@
-
 " ============================================================================
 "
 "                  ██╗   ██╗██╗███╗   ███╗██████╗  ██████╗
@@ -63,7 +62,7 @@ silent! if plug#begin()
         let g:airline_extensions = ['fzf', 'tagbar', 'branch',
           \ 'fugitiveline', 'obsession']
 
-" Browsing 
+" Browsing
     Plug 'preservim/tagbar' | Plug 'preservim/nerdtree'
         nmap <F8> :TagbarToggle<CR>
         nmap <F7> :NERDTreeToggle<CR>
@@ -340,7 +339,7 @@ map <leader>et :edit ~/.config/dotfiles/tmux.conf<CR>
 map <leader>ez :edit ~/.config/dotfiles/zshrc<CR>
 map <leader>df :edit ~/.config/dotfiles/<CR>
 map <leader>en :edit ~/.config/nvim/init.vim<CR>
- 
+
 " Quickfix
 nnoremap ]q :cnext<cr>zz
 nnoremap [q :cprev<cr>zz

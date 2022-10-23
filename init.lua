@@ -27,6 +27,29 @@ require('packer').startup(function(use)
   -- Fuzzy Finder Algorithm which requires local dependencies to be built. Only load if `make` is available
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make', cond = vim.fn.executable "make" == 1 }
 
+  -- Edit
+  use("tpope/vim-sleuth")
+  use("tpope/vim-commentary")
+  use("tpope/vim-endwise")
+  use("tpope/vim-surround")
+  use("tpope/vim-fugitive")
+  use("tpope/vim-unimpaired")
+  use("tpope/vim-repeat")
+	
+  -- Tmux Integration
+  use { 'alexghergh/nvim-tmux-navigation', config = function()
+        local nvim_tmux_nav = require('nvim-tmux-navigation')
+        nvim_tmux_nav.setup {
+            disable_when_zoomed = true -- defaults to false
+        }
+        vim.keymap.set('n', "<C-h>", nvim_tmux_nav.NvimTmuxNavigateLeft)
+        vim.keymap.set('n', "<C-j>", nvim_tmux_nav.NvimTmuxNavigateDown)
+        vim.keymap.set('n', "<C-k>", nvim_tmux_nav.NvimTmuxNavigateUp)
+        vim.keymap.set('n', "<C-l>", nvim_tmux_nav.NvimTmuxNavigateRight)
+        vim.keymap.set('n', "<C-\\>", nvim_tmux_nav.NvimTmuxNavigateLastActive)
+    end
+  }
+
   -- Themes
   use 'mjlbach/onedark.nvim'
   use 'Mofiqul/dracula.nvim'
@@ -93,7 +116,7 @@ vim.wo.signcolumn = 'yes'
 vim.o.termguicolors = true
 -- vim.cmd [[colorscheme onedark]]
 -- vim.cmd[[colorscheme dracula]]
-vim.cmd[[colorscheme tokyonight]]
+vim.cmd[[colorscheme tokyonight-night]]
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
@@ -108,6 +131,10 @@ vim.g.maplocalleader = ' '
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
+
+vim.keymap.set('n', '<C-s>', ':update<CR>')
+vim.keymap.set('i', '<C-s>', '<C-O>:update<CR>')
+
 
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
@@ -201,7 +228,7 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'typescript' },
+  ensure_installed = { 'c', 'cpp', 'lua', 'python', 'rust', 'javascript' },
 
   highlight = { enable = true },
   indent = { enable = true },
@@ -293,7 +320,7 @@ local on_attach = function(_, bufnr)
 
   -- See `:help K` for why this keymap
   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
-  nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+  -- nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
   -- Lesser used LSP functionality
   nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
@@ -321,7 +348,7 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protoc
 require('mason').setup()
 
 -- Enable the following language servers
-local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'sumneko_lua' }
+local servers = { 'clangd', 'rust_analyzer', 'pyright', 'sumneko_lua' }
 
 -- Ensure the servers above are installed
 require('mason-lspconfig').setup {

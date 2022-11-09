@@ -55,6 +55,42 @@ schemes:
       cyan:    '0x0db9d7'
       white:   '0xacb0d0'
 
+  nightfly: &nightfly
+    draw_bold_text_with_bright_colors: true
+    # Default colors
+    primary:
+      background:        '#011627'
+      foreground:        '#acb4c2'
+      bright_foreground: '#eeeeee'
+    # Cursor colors
+    cursor:
+      text:   '#080808'
+      cursor: '#9ca1aa'
+    # Selection colors
+    selection:
+      text:       '#080808'
+      background: '#b2ceee'
+    # Normal colors
+    normal:
+      black:   '#1d3b53'
+      red:     '#fc514e'
+      green:   '#a1cd5e'
+      yellow:  '#e3d18a'
+      blue:    '#82aaff'
+      magenta: '#c792ea'
+      cyan:    '#7fdbca'
+      white:   '#a1aab8'
+    # Bright colors
+    bright:
+      black:   '#7c8f8f'
+      red:     '#ff5874'
+      green:   '#21c7a8'
+      yellow:  '#ecc48d'
+      blue:    '#82aaff'
+      magenta: '#ae81ff'
+      cyan:    '#7fdbca'
+      white:   '#d6deeb'
+
   dracula: &dracula
     primary:
       background: '#282a36'
@@ -108,7 +144,7 @@ schemes:
       cyan: '#a4ffff'
       white: '#ffffff'
      
-colors: *tokyo-night
+colors: *nightfly
 
 window:
   padding:
@@ -119,16 +155,16 @@ window:
 
 font:
   normal:
-    family: MesloLGS NF
+    family: FiraCode Nerd Font Mono
     style: Regular
   bold:
-    family: MesloLGS NF
+    family: FiraCode Nerd Font Mono
     style: Bold
   italic:
-    family: MesloLGS NF
+    family: FiraCode Nerd Font Mono
     style: Italic
   bold_italic:
-    family: MesloLGS NF
+    family: FiraCode Nerd Font Mono
     style: Bold Italic
   size: 18.0
   offset:

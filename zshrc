@@ -108,6 +108,9 @@ if command -v zoxide > /dev/null 2>&1; then
     alias zz="z -"                          # zz to previous directory
 fi
 
+export PATH="$PATH:/usr/local/share/npm/bin"
+# This loads nvm bash_completion 
+
 # }}}
 # ============================================================================
 

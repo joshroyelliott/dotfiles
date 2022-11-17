@@ -24,6 +24,7 @@ M.xyz = {
   -- stuff
   n = {
     ["<leader>z"] = {"<cmd> ZenMode <CR>", "Toggle Zen Mode"},
+    ["<leader>md"] = {"<cmd> MarkdownPreviewToggle <CR>", "Toggle Markdown Preview"}
   }
 }
 

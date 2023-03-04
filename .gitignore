@@ -10,13 +10,6 @@
 # COMPILED SOURCE {{{
 # ============================================================================
 
-*.com
-*.class
-*.dll
-*.exe
-*.key
-*.o
-*.so
 *.pyc
 __pycache__
 
@@ -25,11 +18,9 @@ __pycache__
 # PACKAGES {{{
 # ============================================================================
 
-*.7z
 *.dmg
 *.gz
 *.iso
-*.jar
 *.rar
 *.tar
 *.zip
@@ -51,16 +42,6 @@ __pycache__
 .DS_Store
 .DS_Store?
 ._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-.env
-.env3
-.env2.6
-
-config/gtk-3.0/bookmarks
 
 # }}}
 # ============================================================================
@@ -69,21 +50,10 @@ config/gtk-3.0/bookmarks
 
 Session.vim
 *.swp
-
 tags
-
-.dgen/saves
-.dgen/dgenrc.auto
-
 *~
 *.netrwhist
-
 config/nvim
-
-antigen.zsh
-
-config/Code/
-!config/Code/User/settings.json
 
 # }}}
 # ============================================================================
@@ -92,16 +62,6 @@ config/Code/
 
 .ssh/
 !.ssh/config
-
-.ptpython/history
-
-config/autostart/redshift-gtk.desktop
-config/autostart/gammastep-indicator.desktop
-
-google-chrome*
-get-pip.py
-sam-installation/
-
 .svn
 
 # }}}

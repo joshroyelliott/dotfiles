@@ -17,7 +17,6 @@
 plugins=(
     zsh-syntax-highlighting
     zsh-autosuggestions
-    taskwarrior
 )
 
 # }}}
@@ -44,14 +43,6 @@ _fzf_compgen_dir() {
   fd --type d --hidden --follow --exclude ".git" . "$1"
 }
 
-# Dracula themed FZF (Misbehaves in Terminal.app)
-export FZF_DEFAULT_OPTS='--color=fg:#f8f8f2,hl:#bd93f9 --color=fg+:#f8f8f2,hl+:#bd93f9 --color=info:#ffb86c,prompt:#50fa7b,pointer:#ff79c6 --color=marker:#ff79c6,spinner:#ffb86c,header:#6272a4'
-
-DRACULA_DISPLAY_GIT=1
-DRACULA_DISPLAY_TIME=1
-DRACULA_DISPLAY_CONTEXT=1
-DRACULA_ARROW_ICON="-> "
-
 eval "$(zoxide init zsh)"
 
 # }}}
@@ -61,8 +52,6 @@ eval "$(zoxide init zsh)"
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
-
-ZSH_THEME="dracula"
 
 # Uncomment one of the following lines to change the auto-update behavior
 # zstyle ':omz:update' mode disabled  # disable automatic updates
@@ -78,6 +67,8 @@ source $ZSH/oh-my-zsh.sh
 # ============================================================================
 # ALIASES {{{
 # ============================================================================
+
+export STARSHIP_CONFIG=~/.config/starship/starship.toml
 
 export EDITOR=nvim
 alias v="nvim"
@@ -111,7 +102,10 @@ fi
 export PATH="$PATH:/usr/local/share/npm/bin"
 # This loads nvm bash_completion 
 
+export PATH="/usr/local/opt/llvm/bin:$PATH"
+
 # }}}
 # ============================================================================
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+eval "$(starship init zsh)"

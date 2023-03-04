@@ -154,9 +154,6 @@ silent! if plug#begin()
         let g:vimwiki_list = [{'path': '~/vimwiki/',
                               \ 'syntax': 'markdown', 'ext': '.md'}]
 
-" Other
-    Plug 'mfukar/robotframework-vim'
-
 call plug#end()
 endif
 
@@ -267,15 +264,6 @@ map <leader>df :edit ~/.config/dotfiles/<CR>
 " " Tabs
 " nnoremap ]t :tabn<cr>
 " nnoremap [t :tabp<cr>
-
-" Show syntax under cursor
-nmap <C-m> :call <SID>SynStack()<CR>
-function! <SID>SynStack()
-    if !exists("*synstack")
-        return
-    endif
-        echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
-endfunc
 
 " File specific abbreviations (snippets)
 :autocmd FileType python     :iabbrev <buffer> iff if:<left>

@@ -85,7 +85,7 @@ local config = {
                         bg = "#1e222a",
                 },
                 highlights = function(hl) -- or a function that returns a new table of colors to set
-                        local C = require "default_theme.colors"
+                        local C = require("default_theme.colors")
 
                         hl.Normal = { fg = C.fg, bg = C.bg }
 
@@ -108,16 +108,16 @@ local config = {
                         hop = false,
                         indent_blankline = true,
                         lightspeed = false,
-                            ["neo-tree"] = true,
+                        ["neo-tree"] = true,
                         notify = true,
-                            ["nvim-tree"] = false,
-                            ["nvim-web-devicons"] = true,
+                        ["nvim-tree"] = false,
+                        ["nvim-web-devicons"] = true,
                         rainbow = true,
                         symbols_outline = false,
                         telescope = true,
                         treesitter = true,
                         vimwiki = false,
-                            ["which-key"] = true,
+                        ["which-key"] = true,
                 },
         },
         -- Diagnostics configuration (for vim.diagnostics.config({...})) when diagnostics are on
@@ -166,7 +166,7 @@ local config = {
                 -- end,
 
                 -- Add overrides for LSP server settings, the keys are the name of the server
-                    ["server-settings"] = {
+                ["server-settings"] = {
                         -- example for addings schemas to yamlls
                         -- yamlls = { -- override table for require("lspconfig").yamlls.setup({...})
                         --   settings = {
@@ -189,20 +189,24 @@ local config = {
         mappings = {
                 -- first key is the mode
                 n = {
-                            ["<leader>bb"] = { "<cmd>tabnew<cr>", desc = "New tab" },
-                            ["<leader>bc"] = { "<cmd>BufferLinePickClose<cr>", desc = "Pick to close" },
-                            ["<leader>bj"] = { "<cmd>BufferLinePick<cr>", desc = "Pick to jump" },
-                            ["<leader>bt"] = { "<cmd>BufferLineSortByTabs<cr>", desc = "Sort by tabs" },
-                            ["<leader>md"] = { "<cmd>MarkdownPreviewToggle<cr>", desc = "Toggle Markdown preview" },
-                            ["<leader>mm"] = { "<cmd>MindOpenMain<cr>", desc = "Open main Mind tree" },
-                            ["<leader>mp"] = { "<cmd>MindOpenProject<cr>", desc = "Open project Mind tree" },
-                            ["<leader>mr"] = { "<cmd>MindReloadState<cr>", desc = "Reload Mind state" },
-                            ["<leader>mc"] = { "<cmd>MindClose<cr>", desc = "Close Mind tree" },
-                            ["<leader>st"] = { "<cmd>Telescope<cr>", desc = "Open Telescope" },
+                        ["<leader>bb"] = { "<cmd>tabnew<cr>", desc = "New tab" },
+                        ["<leader>bc"] = { "<cmd>BufferLinePickClose<cr>", desc = "Pick to close" },
+                        ["<leader>bj"] = { "<cmd>BufferLinePick<cr>", desc = "Pick to jump" },
+                        ["<leader>bt"] = { "<cmd>BufferLineSortByTabs<cr>", desc = "Sort by tabs" },
+                        ["<leader>mm"] = { "<cmd>MindOpenMain<cr>", desc = "Open main Mind tree" },
+                        ["<leader>mp"] = { "<cmd>MindOpenProject<cr>", desc = "Open project Mind tree" },
+                        ["<leader>mr"] = { "<cmd>MindReloadState<cr>", desc = "Reload Mind state" },
+                        ["<leader>mc"] = { "<cmd>MindClose<cr>", desc = "Close Mind tree" },
+                        ["<leader>st"] = { "<cmd>Telescope<cr>", desc = "Open Telescope" },
+                        ["<leader>vm"] = { "<cmd>MarkdownPreviewToggle<cr>", desc = "Toggle Markdown preview" },
+                        ["<leader>vo"] = {
+                                "<cmd>w<cr> :call system('/Applications/OpenSCAD.app/Contents/MacOS/OpenSCAD --autocenter --viewall '.expand('%:p') . ' 2> /dev/null &')<cr>",
+                                desc = "Open OpenSCAD",
+                        },
                 },
                 t = {
                         -- setting a mapping to false will disable it
-                            ["<esc>"] = false,
+                        ["<esc>"] = false,
                 },
         },
         -- Configure plugins
@@ -228,12 +232,16 @@ local config = {
                                 "phaazon/mind.nvim",
                                 branch = "v2.2",
                                 requires = { "nvim-lua/plenary.nvim" },
-                                config = function() require("mind").setup() end,
+                                config = function()
+                                        require("mind").setup()
+                                end,
                         },
                         {
                                 "iamcco/markdown-preview.nvim",
                                 run = "cd app && npm install",
-                                setup = function() vim.g.mkdp_filetypes = { "markdown" } end,
+                                setup = function()
+                                        vim.g.mkdp_filetypes = { "markdown" }
+                                end,
                                 ft = { "markdown" },
                         },
                         -- We also support a key value style plugin definition similar to NvChad:
@@ -245,7 +253,7 @@ local config = {
                         -- },
                 },
                 -- All other entries override the require("<key>").setup({...}) call for default plugins
-                    ["null-ls"] = function(config) -- overrides `require("null-ls").setup(config)`
+                ["null-ls"] = function(config) -- overrides `require("null-ls").setup(config)`
                         -- config variable is the default configuration table for the setup function call
                         -- local null_ls = require "null-ls"
 
@@ -263,15 +271,15 @@ local config = {
                         -- ensure_installed = { "lua" },
                 },
                 -- use mason-lspconfig to configure LSP installations
-                    ["mason-lspconfig"] = { -- overrides `require("mason-lspconfig").setup(...)`
+                ["mason-lspconfig"] = { -- overrides `require("mason-lspconfig").setup(...)`
                         -- ensure_installed = { "sumneko_lua" },
                 },
                 -- use mason-null-ls to configure Formatters/Linter installation for null-ls sources
-                    ["mason-null-ls"] = { -- overrides `require("mason-null-ls").setup(...)`
+                ["mason-null-ls"] = { -- overrides `require("mason-null-ls").setup(...)`
                         -- ensure_installed = { "prettier", "stylua" },
                 },
-                    ["mason-nvim-dap"] = { -- overrides `require("mason-nvim-dap").setup(...)`
-                        -- ensure_installed = { "python" },
+                ["mason-nvim-dap"] = { -- overrides `require("mason-nvim-dap").setup(...)`
+                        ensure_installed = { "python" },
                 },
         },
         -- LuaSnip Options
@@ -326,16 +334,18 @@ local config = {
                 -- },
         },
         -- Modify which-key registration (Use this with mappings table in the above.)
-            ["which-key"] = {
+        ["which-key"] = {
                 -- Add bindings which show up as group name
                 register = {
                         -- first key is the mode, n == normal mode
                         n = {
                                 -- second key is the prefix, <leader> prefixes
-                                    ["<leader>"] = {
+                                ["<leader>"] = {
                                         -- third key is the key to bring up next level and its displayed
                                         -- group name in which-key top level menu
-                                            ["b"] = { name = "Buffer" },
+                                        ["b"] = { name = "Buffer" },
+                                        ["v"] = { name = "Viewer" },
+                                        ["m"] = { name = "Mind" },
                                 },
                         },
                 },

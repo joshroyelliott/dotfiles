@@ -1,0 +1,19 @@
+{
+  "name": "AstroNvim",
+  "index": 2100,
+  "show-in-gui": true,
+
+  "colors": {
+    "background": "#1e222a",
+    "axes-color": "#5c6370",
+    "opencsg-face-front": "#dedede",
+    "opencsg-face-back": "#61afef",
+    "cgal-face-front": "#56b6c2",
+    "cgal-face-back": "#a4ffff",
+    "cgal-face-2d": "#98c379",
+    "cgal-edge-front": "#e5c07b",
+    "cgal-edge-back": "#88cbd4",
+    "cgal-edge-2d": "#e06c75",
+    "crosshair": "#c678dd"
+  }
+}

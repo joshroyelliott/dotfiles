@@ -70,7 +70,8 @@ source $ZSH/oh-my-zsh.sh
 
 export STARSHIP_CONFIG=~/.config/starship/starship.toml
 
-export EDITOR=nvim
+export EDITOR='nvim'
+export VISUAL='nvim'
 alias v="nvim"
 
 # Quick access to dotfiles

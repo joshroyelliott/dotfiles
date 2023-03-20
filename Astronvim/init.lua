@@ -200,7 +200,7 @@ local config = {
                         ["<leader>st"] = { "<cmd>Telescope<cr>", desc = "Open Telescope" },
                         ["<leader>vm"] = { "<cmd>MarkdownPreviewToggle<cr>", desc = "Toggle Markdown preview" },
                         ["<leader>vo"] = {
-                                "<cmd>w<cr> :call system('/Applications/OpenSCAD.app/Contents/MacOS/OpenSCAD --autocenter --viewall '.expand('%:p') . ' 2> /dev/null &')<cr>",
+                                "<cmd>w<cr> :call system('/Applications/OpenSCAD.app/Contents/MacOS/OpenSCAD --colorscheme AstroNvim '.expand('%:p') . ' 2> /dev/null &')<cr>",
                                 desc = "Open OpenSCAD",
                         },
                 },
@@ -264,6 +264,7 @@ local config = {
                                 -- Set a formatter
                                 -- null_ls.builtins.formatting.stylua,
                                 -- null_ls.builtins.formatting.prettier,
+                                timeout = 10000,
                         }
                         return config -- return final config table
                 end,
@@ -280,6 +281,33 @@ local config = {
                 },
                 ["mason-nvim-dap"] = { -- overrides `require("mason-nvim-dap").setup(...)`
                         ensure_installed = { "python" },
+                        -- config = function(plugin, opts)
+                        --         local mason_nvim_dap = require("mason-nvim-dap")
+                        --         mason_nvim_dap.setup(opts) -- run setup
+                        --         -- do more configuration as needed
+                        --         mason_nvim_dap.setup_handlers({
+                        --                 python = function(source_name)
+                        --                         local dap = require("dap")
+                        --                         dap.adapters.python = {
+                        --                                 type = "executable",
+                        --                                 command = "/usr/bin/python3",
+                        --                                 args = {
+                        --                                         "-m",
+                        --                                         "debugpy.adapter",
+                        --                                 },
+                        --                         }
+                        --
+                        --                         dap.configurations.python = {
+                        --                                 {
+                        --                                         type = "python",
+                        --                                         request = "launch",
+                        --                                         name = "Launch file",
+                        --                                         program = "${file}", -- This configuration will launch the current file if used.
+                        --                                 },
+                        --                         }
+                        --                 end,
+                        --         })
+                        -- end,
                 },
         },
         -- LuaSnip Options

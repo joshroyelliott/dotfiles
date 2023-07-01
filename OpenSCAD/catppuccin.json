@@ -1,0 +1,18 @@
+{
+  "name": "Catppuccin",
+  "index": 2200,
+  "show-in-gui": true,
+  "colors": {
+    "background": "#1e1e2e",
+    "axes-color": "#a6adc8",
+    "opencsg-face-front": "#cdd6f4",
+    "opencsg-face-back": "#a6e3a1",
+    "cgal-face-front": "#cdd6f4",
+    "cgal-face-back": "#a6e3a1",
+    "cgal-face-2d": "#89b4fa",
+    "cgal-edge-front": "#f38ba8",
+    "cgal-edge-back": "#f38ba8",
+    "cgal-edge-2d": "#f5c2e7",
+    "crosshair": "#bac2de"
+  }
+}

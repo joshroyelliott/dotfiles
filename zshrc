@@ -35,12 +35,12 @@ export FZF_COMPLETION_OPTS='--info=inline'
 # - The first argument to the function ($1) is the base path to start traversal
 # - See the source code (completion.{bash,zsh}) for the details.
 _fzf_compgen_path() {
-  fd --hidden --follow --exclude ".git" . "$1"
+    fd --hidden --follow --exclude ".git" . "$1"
 }
 
 # Use fd to generate the list for directory completion
 _fzf_compgen_dir() {
-  fd --type d --hidden --follow --exclude ".git" . "$1"
+    fd --type d --hidden --follow --exclude ".git" . "$1"
 }
 
 eval "$(zoxide init zsh)"
@@ -68,11 +68,31 @@ source $ZSH/oh-my-zsh.sh
 # ALIASES {{{
 # ============================================================================
 
-export STARSHIP_CONFIG=~/.config/starship/starship.toml
+# Uncomment to use custom prompt
+# export STARSHIP_CONFIG=~/.config/starship/starship.toml
 
 export EDITOR='nvim'
 export VISUAL='nvim'
-alias v="nvim"
+
+# Nvim config selector
+alias nvim-astro="NVIM_APPNAME=AstroNvim nvim"
+alias nvim-chad="NVIM_APPNAME=NvChad nvim"
+alias nvim-lazy="NVIM_APPNAME=LazyVim nvim"
+
+function nvims() {
+    items=("Default" "AstroNvim" "NvChad" "LazyVim")
+    config=$(printf '%s\n' "${items[@]}" | fzf --prompt="Select nvim config: " --height=~50% --layout=reverse --border --exit-0)
+    if [[ -z "$config" ]]; then
+        echo "No config selected"
+        return 0
+    elif [[ "$config" == "default" ]]; then
+        config=""
+    fi
+    NVIM_APPNAME="$config" nvim $@
+}
+
+bindkey -s ^n "nvims\n"
+alias v="nvim-astro"
 
 # Quick access to dotfiles
 alias zshrc='${=EDITOR} ${ZDOTDIR:-$HOME}/.zshrc'
@@ -100,8 +120,11 @@ if command -v zoxide > /dev/null 2>&1; then
     alias zz="z -"                          # zz to previous directory
 fi
 
+# zk notebook
+export ZK_NOTEBOOK_DIR="$HOME/notes"
+
 export PATH="$PATH:/usr/local/share/npm/bin"
-# This loads nvm bash_completion 
+# This loads nvm bash_completion
 
 export PATH="/usr/local/opt/llvm/bin:$PATH"
 

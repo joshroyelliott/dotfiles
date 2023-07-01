@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 dotfiles_dir="$HOME/.config/dotfiles"
 symlinked_files=("zshrc" "tmux.conf")
@@ -20,6 +20,6 @@ for file in "${symlinked_files[@]}"; do
     fi
 
     # Create the symbolic link
-    ln -s "$dotfile_path" "$symlink_path"
-    echo "Created symlink for '$dotfile_path' in '$symlink_path'"
+    ln -s "$dotfile_path" ."$symlink_path"
+    echo "Created symlink for '$dotfile_path' in .'$symlink_path'"
 done
